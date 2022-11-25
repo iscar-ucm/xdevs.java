@@ -1,0 +1,21 @@
+# MacOS
+.DS_Store
+
+# VSCode
+target
+.classpath
+.settings
+.project
+*.swp
+*.log
+*.log.*
+
+# IntelliJ stuff
+.idea/
+out/
+*.iml
+
+# Apache netbeans
+nb-configuration.xml
+nbactions.xml
+licenseheader.txt

@@ -160,6 +160,10 @@ public class DevStoneSimulation {
         framework.addComponent(stone);
         framework.addCoupling(generator.oOut, stone.iIn);
         switch (model) {
+            case LI:
+                break;
+            case HI:
+                break;
             case HO:
                 framework.addCoupling(generator.oOut, ((DevStoneCoupledHO) stone).iInAux);
                 break;
@@ -169,8 +173,6 @@ public class DevStoneSimulation {
             case HOmod:
                 framework.addCoupling(generator.oOut, ((DevStoneCoupledHOmod) stone).iInAux);
                 break;
-            default:
-                LOGGER.severe(String.format("Model not supported: {}", model.toString()));
         }
     }
 

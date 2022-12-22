@@ -126,44 +126,53 @@ public class DevStoneSimulation {
         DevStoneGenerator generator = new DevStoneGenerator("Generator", PREPARATION_TIME, PERIOD, MAX_EVENTS);
         framework.addComponent(generator);
         switch (model) {
-        case LI:
-            stone = (distribution != null) ? new DevStoneCoupledLI("C", width, depth, PREPARATION_TIME, distribution)
-                    : new DevStoneCoupledLI("C", width, depth, PREPARATION_TIME, Double.parseDouble(delayDistribution),
-                            Double.parseDouble(delayDistribution));
-            break;
-        case HI:
-            stone = (distribution != null) ? new DevStoneCoupledHI("C", width, depth, PREPARATION_TIME, distribution)
-                    : new DevStoneCoupledHI("C", width, depth, PREPARATION_TIME, Double.parseDouble(delayDistribution),
-                            Double.parseDouble(delayDistribution));
-            break;
-        case HO:
-            stone = (distribution != null) ? new DevStoneCoupledHO("C", width, depth, PREPARATION_TIME, distribution)
-                    : new DevStoneCoupledHO("C", width, depth, PREPARATION_TIME, Double.parseDouble(delayDistribution),
-                            Double.parseDouble(delayDistribution));
-            break;
-        case HOmod:
-            stone = (distribution != null) ? new DevStoneCoupledHOmod("C", width, depth, PREPARATION_TIME, distribution)
-                    : new DevStoneCoupledHOmod("C", width, depth, PREPARATION_TIME,
-                            Double.parseDouble(delayDistribution), Double.parseDouble(delayDistribution));
-            break;
-        default:
-            LOGGER.severe(String.format("Model not supported: {}", model.toString()));
-            return;
+            case LI:
+                stone = (distribution != null)
+                        ? new DevStoneCoupledLI("C", width, depth, PREPARATION_TIME, distribution)
+                        : new DevStoneCoupledLI("C", width, depth, PREPARATION_TIME,
+                                Double.parseDouble(delayDistribution),
+                                Double.parseDouble(delayDistribution));
+                break;
+            case HI:
+                stone = (distribution != null)
+                        ? new DevStoneCoupledHI("C", width, depth, PREPARATION_TIME, distribution)
+                        : new DevStoneCoupledHI("C", width, depth, PREPARATION_TIME,
+                                Double.parseDouble(delayDistribution),
+                                Double.parseDouble(delayDistribution));
+                break;
+            case HO:
+                stone = (distribution != null)
+                        ? new DevStoneCoupledHO("C", width, depth, PREPARATION_TIME, distribution)
+                        : new DevStoneCoupledHO("C", width, depth, PREPARATION_TIME,
+                                Double.parseDouble(delayDistribution),
+                                Double.parseDouble(delayDistribution));
+                break;
+            case HOmod:
+                stone = (distribution != null)
+                        ? new DevStoneCoupledHOmod("C", width, depth, PREPARATION_TIME, distribution)
+                        : new DevStoneCoupledHOmod("C", width, depth, PREPARATION_TIME,
+                                Double.parseDouble(delayDistribution), Double.parseDouble(delayDistribution));
+                break;
+            default:
+                LOGGER.severe(String.format("Model not supported: {}", model.toString()));
+                return;
         }
         framework.addComponent(stone);
         framework.addCoupling(generator.oOut, stone.iIn);
         switch (model) {
-        case HO:
-            framework.addCoupling(generator.oOut, ((DevStoneCoupledHO) stone).iInAux);
-            break;
-        case HOmem:
-            framework.addCoupling(generator.oOut, ((DevStoneCoupledHOmem) stone).iInAux);
-            break;
-        case HOmod:
-            framework.addCoupling(generator.oOut, ((DevStoneCoupledHOmod) stone).iInAux);
-            break;
-        default:
-            LOGGER.severe(String.format("Model not supported: {}", model.toString()));
+            case LI:
+                break;
+            case HI:
+                break;
+            case HO:
+                framework.addCoupling(generator.oOut, ((DevStoneCoupledHO) stone).iInAux);
+                break;
+            case HOmem:
+                framework.addCoupling(generator.oOut, ((DevStoneCoupledHOmem) stone).iInAux);
+                break;
+            case HOmod:
+                framework.addCoupling(generator.oOut, ((DevStoneCoupledHOmod) stone).iInAux);
+                break;
         }
     }
 
@@ -275,11 +284,14 @@ public class DevStoneSimulation {
                 "MODEL,MAXEVENTS,WIDTH,DEPTH,NUM_DELT_INTS,NUM_DELT_EXTS,NUM_OF_EVENTS,SIMULATION_TIME,MODEL_CREATION_TIME,ENGINE_SETUP_TIME");
         String stats = "";
         if (DevStoneAtomic.NUM_DELT_INTS != numDeltInts)
-            LOGGER.severe("ERROR: NUM_DELT_INTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_INTS + " [" + numDeltInts + "]");
+            LOGGER.severe(
+                    "ERROR: NUM_DELT_INTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_INTS + " [" + numDeltInts + "]");
         if (DevStoneAtomic.NUM_DELT_EXTS != numDeltExts)
-            LOGGER.severe("ERROR: NUM_DELT_EXTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_EXTS + " [" + numDeltExts + "]");
+            LOGGER.severe(
+                    "ERROR: NUM_DELT_EXTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_EXTS + " [" + numDeltExts + "]");
         if (DevStoneAtomic.NUM_OF_EVENTS != numOfEvents)
-            LOGGER.severe("ERROR: NUM_OF_EVENTS [THEORICAL]: " + DevStoneAtomic.NUM_OF_EVENTS + " [" + numOfEvents + "]");
+            LOGGER.severe(
+                    "ERROR: NUM_OF_EVENTS [THEORICAL]: " + DevStoneAtomic.NUM_OF_EVENTS + " [" + numOfEvents + "]");
         if (stone != null) {
             stats = model.toString() + "," + MAX_EVENTS + "," + width + "," + depth + "," + DevStoneAtomic.NUM_DELT_INTS
                     + "," + DevStoneAtomic.NUM_DELT_EXTS + "," + DevStoneAtomic.NUM_OF_EVENTS + "," + simulationTime
@@ -291,6 +303,10 @@ public class DevStoneSimulation {
 
         }
         LOGGER.info(stats);
+        System.out.println("========== SUMMARY ==========");
+        System.out.println("Model creation time (s): " + modelCreationTime);
+        System.out.println("Engine setup time (s): " + engineSetupTime);
+        System.out.println("Simulation time (s): " + simulationTime);
     }
 
     private void saveXml() {

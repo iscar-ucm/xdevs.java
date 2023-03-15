@@ -17,7 +17,7 @@
  * Contributors:
  *  - José Luis Risco Martín
  */
-package xdevs.lib.performance;
+package xdevs.core.examples.devstone;
 
 import org.apache.commons.math3.distribution.RealDistribution;
 

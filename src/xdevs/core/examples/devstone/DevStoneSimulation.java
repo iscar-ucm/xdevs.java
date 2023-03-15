@@ -1,4 +1,4 @@
-package xdevs.lib.performance;
+package xdevs.core.examples.devstone;
 
 import java.io.BufferedWriter;
 import java.io.File;

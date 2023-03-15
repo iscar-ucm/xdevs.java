@@ -17,99 +17,88 @@
  * Contributors:
  *  - José Luis Risco Martín
  */
-package xdevs.lib.performance;
+package xdevs.core.examples.devstone;
 
-import org.apache.commons.math3.distribution.RealDistribution;
 import org.w3c.dom.Element;
 
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Component;
 import xdevs.core.modeling.Port;
-import xdevs.lib.util.Dhrystone;
 
 /**
- * Atomic model to study the performance using the DEVStone benchmark
+ * Events generator for the DEVStone benchmark
  *
  * @author José Luis Risco Martín
- *
  */
-public class DevStoneAtomic extends Atomic {
-      
-    public Port<Integer> iIn = new Port<>("in");
+public class DevStoneGenerator extends Atomic {
+
     public Port<Integer> oOut = new Port<>("out");
-    protected Dhrystone dhrystone;
-    
     protected double preparationTime;
-    protected double intDelayTime;
-    protected double extDelayTime;
-    
-    public static long NUM_DELT_INTS = 0;
-    public static long NUM_DELT_EXTS = 0;
-    public static long NUM_OF_EVENTS = 0;
-    
-    public DevStoneAtomic(String name, double preparationTime, double intDelayTime, double extDelayTime) {
+    protected double period;
+    protected int counter = 1;
+    protected int maxEvents = Integer.MAX_VALUE;
+
+    public DevStoneGenerator(String name, double preparationTime, double period, int maxEvents) {
         super(name);
-        super.addInPort(iIn);
         super.addOutPort(oOut);
         this.preparationTime = preparationTime;
-        this.intDelayTime = intDelayTime;
-        this.extDelayTime = extDelayTime;
-    }
-    
-    public DevStoneAtomic(String name, double preparationTime, RealDistribution distribution) {
-        this(name, preparationTime, distribution.sample(), distribution.sample());
+        this.period = period;
+        this.maxEvents = maxEvents;
     }
 
-    public DevStoneAtomic(Element xmlAtomic) {
-        this(xmlAtomic.getAttribute("name"), 
-            Double.parseDouble(((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")),
-            Double.parseDouble(((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(1))).getAttribute("value")),
-            Double.parseDouble(((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(2))).getAttribute("value")));
+    public DevStoneGenerator(Element xmlAtomic) {
+        this(xmlAtomic.getAttribute("name"),
+                Double.parseDouble(
+                        ((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")),
+                Double.parseDouble(
+                        ((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(1))).getAttribute("value")),
+                Integer.parseInt(
+                        ((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(2))).getAttribute("value")));
     }
 
     @Override
     public void initialize() {
-        super.passivate();
+        counter = 1;
+        this.holdIn("active", preparationTime);
     }
-    
+
     @Override
-    public void exit() { }
+    public void exit() {
+    }
 
     @Override
     public void deltint() {
-        NUM_DELT_INTS++;
-        Dhrystone.execute(intDelayTime);
-        super.passivate();
+        counter++;
+        if (counter > maxEvents) {
+            super.passivate();
+        } else {
+            this.holdIn("active", period);
+        }
     }
-    
+
     @Override
     public void deltext(double e) {
         super.resume(e);
-        NUM_DELT_EXTS++;
-        Dhrystone.execute(extDelayTime);
-        if (!iIn.isEmpty()) {
-            NUM_OF_EVENTS += iIn.getValues().size();
-        }
-        super.holdIn("active", preparationTime);
+        super.passivate();
     }
-    
+
     @Override
     public void lambda() {
-        oOut.addValue(0);
+        oOut.addValue(counter);
+    }
+
+    public double getPeriod() {
+        return period;
+    }
+
+    public int getMaxEvents() {
+        return maxEvents;
     }
 
     public double getPreparationTime() {
         return preparationTime;
     }
 
-    public double getIntDelayTime() {
-        return intDelayTime;
-    }
-
-    public double getExtDelayTime() {
-        return extDelayTime;
-    }  
-    
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         StringBuilder tabs = new StringBuilder();
@@ -120,14 +109,15 @@ public class DevStoneAtomic extends Atomic {
             level++;
             parent = parent.getParent();
         }
+
         builder.append(tabs).append("<atomic name=\"").append(this.getName()).append("\"");
         builder.append(" class=\"").append(this.getClass().getCanonicalName()).append("\"");
         builder.append(" host=\"127.0.0.1\"");
         builder.append(" port=\"").append(5000 + level).append("\"");
         builder.append(">\n");
         builder.append(tabs).append("\t<constructor-arg value=\"").append(this.getPreparationTime()).append("\"/>\n");
-        builder.append(tabs).append("\t<constructor-arg value=\"").append(this.getIntDelayTime()).append("\"/>\n");
-        builder.append(tabs).append("\t<constructor-arg value=\"").append(this.getExtDelayTime()).append("\"/>\n");
+        builder.append(tabs).append("\t<constructor-arg value=\"").append(this.getPeriod()).append("\"/>\n");
+        builder.append(tabs).append("\t<constructor-arg value=\"").append(this.getMaxEvents()).append("\"/>\n");
         builder.append(tabs).append("</atomic>\n");
         
         return builder.toString();

@@ -17,7 +17,7 @@
  * Contributors:
  *  - José Luis Risco Martín
  */
-package xdevs.lib.performance;
+package xdevs.core.examples.devstone;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

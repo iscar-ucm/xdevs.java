@@ -17,7 +17,7 @@
  * Contributors:
  *  - José Luis Risco Martín
  */
-package xdevs.lib.util;
+package xdevs.core.examples.devstone;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;

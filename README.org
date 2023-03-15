@@ -22,7 +22,7 @@ This is the Java implementation of the [[https://github.com/iscar-ucm/xdevs][xDE
 
   #+begin_example
     rm -rf logger.log
-    java -cp target/xdevs-2.0.1-jar-with-dependencies.jar xdevs.lib.performance.DevStoneSimulation --model=HO --width=150 --depth=150 --coordinator=Coordinator
+    java -cp target/xdevs-3.0.0-jar-with-dependencies.jar xdevs.core.examples.devstone.DevStoneSimulation --model=HO --width=150 --depth=150 --coordinator=Coordinator
     tail logger.log 
     [INFO-main|00:00:02.582]: MODEL,MAXEVENTS,WIDTH,DEPTH,NUM_DELT_INTS,NUM_DELT_EXTS,NUM_OF_EVENTS,SIMULATION_TIME,MODEL_CREATION_TIME,ENGINE_SETUP_TIME 
     [INFO-main|00:00:02.661]: HO,1,150,150,1665076,1665076,1665076,2.439,0.114,0.029 

@@ -48,6 +48,9 @@ public abstract class Component {
     }
     
     public abstract void initialize();
+    public boolean modelTransition() {
+        return false;
+    }
     public abstract void exit();
     public abstract String toXml();
 

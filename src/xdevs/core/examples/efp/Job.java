@@ -37,6 +37,10 @@ public class Job implements Serializable {
     this.id = name;
     this.time = 0.0;
   }
+
+  public void setTime(double time) {
+    this.time = time;
+  }
   
   @Override
   public String toString() {

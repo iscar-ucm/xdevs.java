@@ -78,8 +78,11 @@ public class Machine extends Atomic {
     }
 
     @Override
-    public boolean modelTransition() {
-        return queue.size()==0 || queue.size()>=2;
+    public DynamicTransition dynamicTransition() {
+        if (queue.size()==0 || queue.size()>=2) {
+            return DynamicTransition.TRUE;
+        }
+        return DynamicTransition.FALSE;
     }
 
     @Override

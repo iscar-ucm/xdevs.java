@@ -33,6 +33,7 @@ public abstract class AbstractSimulator {
     protected SimulationClock clock;
     protected double tL; // Time of last event
     protected double tN; // Time of next event
+    Component.DynamicTransition dynamicTransition = Component.DynamicTransition.FALSE;
 
     public AbstractSimulator(SimulationClock clock) {
         this.clock = clock;

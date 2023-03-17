@@ -27,9 +27,27 @@ import java.util.Collection;
 
 public abstract class Component {
 
+    /**
+     * Dynamic transition: specifies the type of structural transition that is to be performed.
+     */
+    public enum DynamicTransition {
+        FALSE,          // No dynamic transition
+        TRUE,           // Generic dynamic transition: the coupled model will know what to do
+        DELETE_MODEL,   // Delete model
+        CREATE_MODEL,   // Create model
+        MOVE_MODEL,     // Move model
+        OTHER           // Other dynamic transition
+    }
+
     // Component attributes
+    /// Parent component
     protected Component parent = null;
     protected String name;
+    protected DynamicTransition dynamicTransition = DynamicTransition.FALSE;
+    public DynamicTransition getDynamicTransition() {
+        return dynamicTransition;
+    }
+
     protected ArrayList<Port<?>> inPorts = new ArrayList<>();
     protected ArrayList<Port<?>> outPorts = new ArrayList<>();
 
@@ -48,9 +66,15 @@ public abstract class Component {
     }
     
     public abstract void initialize();
-    public boolean modelTransition() {
-        return false;
+
+    /**
+     * This method is called by the SimulatorDynamic, inside the generic transition function, to compute the change of the system' structure.
+     * @return the type of structural transition that is to be performed.
+     */
+    public void dynamicTransition() {
+        dynamicTransition =  DynamicTransition.FALSE;
     }
+
     public abstract void exit();
     public abstract String toXml();
 

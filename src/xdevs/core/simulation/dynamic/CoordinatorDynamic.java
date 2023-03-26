@@ -67,10 +67,10 @@ public class CoordinatorDynamic extends Coordinator {
         boolean internalDynamicTransition = false;
         for (AbstractSimulator simulator : simulators) {
             simulator.deltfcn();
-            if(simulator.getModel().getDynamicTransition()!=Component.DynamicTransition.FALSE)
+            if(simulator.getModel().getStructuralTransition()!=Component.StructuralTransition.FALSE)
                 internalDynamicTransition = true; 
         }
-        model.dynamicTransition();
+        model.structuralTransition();
         tL = clock.getTime();
         tN = tL + ta();
     }

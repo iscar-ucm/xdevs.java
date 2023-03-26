@@ -50,7 +50,7 @@ public class SimulatorDynamic extends Simulator {
             model.deltint();
         else
             return;
-        model.dynamicTransition();
+        model.structuralTransition();
         tL = t;
         tN = tL + model.ta();
     }

@@ -28,24 +28,26 @@ import java.util.Collection;
 public abstract class Component {
 
     /**
-     * Dynamic transition: specifies the type of structural transition that is to be performed.
+     * Structural transition: specifies the type of structural transition that is to be performed.
      */
-    public enum DynamicTransition {
-        FALSE,          // No dynamic transition
-        TRUE,           // Generic dynamic transition: the coupled model will know what to do
+    public enum StructuralTransition {
+        FALSE,          // No structural transition
+        NEW_MODEL,      // Create model
         DELETE_MODEL,   // Delete model
-        CREATE_MODEL,   // Create model
-        MOVE_MODEL,     // Move model
-        OTHER           // Other dynamic transition
+        OTHER           // Other structural transition, no actions needed by the simulation layer
     }
 
     // Component attributes
     /// Parent component
     protected Component parent = null;
     protected String name;
-    protected DynamicTransition dynamicTransition = DynamicTransition.FALSE;
-    public DynamicTransition getDynamicTransition() {
-        return dynamicTransition;
+    protected StructuralTransition structuralTransition = StructuralTransition.FALSE;
+    public void setStructuralTransition(StructuralTransition structuralTransition) {
+        this.structuralTransition = structuralTransition;
+    }
+
+    public StructuralTransition getStructuralTransition() {
+        return structuralTransition;
     }
 
     protected ArrayList<Port<?>> inPorts = new ArrayList<>();
@@ -66,15 +68,6 @@ public abstract class Component {
     }
     
     public abstract void initialize();
-
-    /**
-     * This method is called by the SimulatorDynamic, inside the generic transition function, to compute the change of the system' structure.
-     * @return the type of structural transition that is to be performed.
-     */
-    public void dynamicTransition() {
-        dynamicTransition =  DynamicTransition.FALSE;
-    }
-
     public abstract void exit();
     public abstract String toXml();
 

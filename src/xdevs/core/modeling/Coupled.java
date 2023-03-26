@@ -65,6 +65,15 @@ public class Coupled extends Component {
     public void initialize() {
     }
 
+    /**
+     * This method is called by the CoordinatorDynamic, inside the generic transition function, to compute the change of the system' structure.
+     * @return the type of structural transition that is to be performed.
+     */
+    public void structuralTransition() {
+        structuralTransition =  StructuralTransition.FALSE;
+    }
+
+
     @Override
     public void exit() {
     }

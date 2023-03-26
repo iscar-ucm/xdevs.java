@@ -18,7 +18,7 @@
 *  - José Luis Risco Martín
 */
 
-package xdevs.core.examples.ds_devs;
+package xdevs.core.examples.dynamic;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -75,14 +75,6 @@ public class Machine extends Atomic {
                 job.setTime(clock);
                 queue.add(job);
         });
-    }
-
-    @Override
-    public DynamicTransition dynamicTransition() {
-        if (queue.size()==0 || queue.size()>=2) {
-            return DynamicTransition.TRUE;
-        }
-        return DynamicTransition.FALSE;
     }
 
     @Override

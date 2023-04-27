@@ -33,9 +33,9 @@ import xdevs.core.modeling.Port;
  *         be added.
  */
 public class Generator extends Atomic {
-    protected Port<Job> iStart = new Port<>("iStart");
-    protected Port<Job> iStop = new Port<>("iStop");
-    protected Port<Job> oOut = new Port<>("oOut");
+    public Port<Job> iStart = new Port<>("iStart");
+    public Port<Job> iStop = new Port<>("iStop");
+    public Port<Job> oOut = new Port<>("oOut");
     protected int jobCounter;
     protected double period;
 

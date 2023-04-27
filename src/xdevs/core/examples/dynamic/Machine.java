@@ -20,26 +20,26 @@
 
 package xdevs.core.examples.dynamic;
 
-import java.util.Deque;
-import java.util.LinkedList;
-
 import xdevs.core.examples.efp.Job;
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
 public class Machine extends Atomic {
 
-    protected Port<Job> iJob = new Port<>("iJob");
-    protected Port<Job> oJob = new Port<>("oJob");
-    protected Port<Double> oServiceTime = new Port<>("oServiceTime");
-    protected Deque<Job> queue = new LinkedList<>();
+    public Port<Job> iJob = new Port<>("iJob");
+    public Port<Job> oJobSolved = new Port<>("oJobSolved");
+    public Port<Job> oJobIgnored = new Port<>("oJobIgnored");
     protected double processingTime;
+    protected double ignoringTime;
     protected double clock;
+    protected Job processingJob;
+    protected Job ignoringJob;
 
     public Machine(String name, double processingTime) {
         super(name);
         super.addInPort(iJob);
-        super.addOutPort(oJob);
+        super.addOutPort(oJobSolved);
+        super.addOutPort(oJobIgnored);
         this.processingTime = processingTime;
         this.clock = 0;
 
@@ -47,8 +47,9 @@ public class Machine extends Atomic {
 
     @Override
     public void initialize() {
-        queue.clear();
         super.passivate();
+        processingJob = null;
+        ignoringJob = null;
     }
 
     @Override
@@ -58,28 +59,40 @@ public class Machine extends Atomic {
     @Override
     public void deltint() {
         clock += super.getSigma();
-        queue.poll();
-        if(queue.isEmpty())
+        if(super.phaseIs("busy")) {
+            processingJob = null;
             super.passivate();
-        else
-            super.holdIn("busy", processingTime);
+        }
+        else if(super.phaseIs("busy+ignoring")) {
+            ignoringJob = null;
+            super.holdIn("busy", processingTime-ignoringTime);
+        }
     }
 
     @Override
     public void deltext(double e) {
         super.resume(e);
         clock += e;
-        iJob.getValues().forEach((job) -> {
-            if(queue.isEmpty())
-                super.holdIn("busy", processingTime);
-                job.setTime(clock);
-                queue.add(job);
-        });
+        Job job = iJob.getSingleValue();
+        if (processingJob == null) {
+            processingJob = job;
+            super.holdIn("busy", processingTime);
+            processingJob.setTime(clock);
+        }
+        else {
+            ignoringJob = job;
+            ignoringTime = e;
+            super.holdIn("busy+ignoring", 0.0);            
+        }
     }
 
     @Override
     public void lambda() {
-        oJob.addValue(queue.peek());
-        oServiceTime.addValue(processingTime*(queue.size()-1));
+        if(super.phaseIs("busy")) {
+            oJobSolved.addValue(processingJob);
+        }
+        else if(super.phaseIs("busy+ignoring")) {
+            oJobIgnored.addValue(ignoringJob);
+        }
     }
 }

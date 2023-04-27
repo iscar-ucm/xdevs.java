@@ -37,9 +37,9 @@ public class Transducer extends Atomic {
 
     private static final Logger LOGGER = Logger.getLogger(Transducer.class.getName());
 
-    protected Port<Job> iArrived = new Port<>("iArrived");
-    protected Port<Job> iSolved = new Port<>("iSolved");
-    protected Port<Job> oOut = new Port<>("oOut");
+    public Port<Job> iArrived = new Port<>("iArrived");
+    public Port<Job> iSolved = new Port<>("iSolved");
+    public Port<Job> oOut = new Port<>("oOut");
 
     protected LinkedList<Job> jobsArrived = new LinkedList<>();
     protected LinkedList<Job> jobsSolved = new LinkedList<>();
@@ -105,19 +105,19 @@ public class Transducer extends Atomic {
         super.resume(e);
         clock = clock + e;
         if (phaseIs("active")) {
-            Job job = null;
             if (!iArrived.isEmpty()) {
-                job = iArrived.getSingleValue();
+                Job job = iArrived.getSingleValue();
                 LOGGER.fine("Start job " + job.id + " @ t = " + clock);
                 job.time = clock;
                 jobsArrived.add(job);
             }
             if (!iSolved.isEmpty()) {
-                job = iSolved.getSingleValue();
-                totalTa += (clock - job.time);
-                LOGGER.fine("Finish job " + job.id + " @ t = " + clock);
-                job.time = clock;
-                jobsSolved.add(job);
+                for(Job job : iSolved.getValues()) {
+                    totalTa += (clock - job.time);
+                    LOGGER.fine("Finish job " + job.id + " @ t = " + clock);
+                    job.time = clock;
+                    jobsSolved.add(job);
+                }
             }
         }
         //logger.info("###Deltext: "+showState());

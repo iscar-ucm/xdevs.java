@@ -66,11 +66,11 @@ public class Coupled extends Component {
     }
 
     /**
-     * This method is called by the CoordinatorDynamic, inside the generic transition function, to compute the change of the system' structure.
-     * @return the type of structural transition that is to be performed.
+     * This method is called by the simulator to check possible structural changes.
+     * @return true if the model has changed its structure, false otherwise
      */
-    public void structuralTransition() {
-        structuralTransition =  StructuralTransition.FALSE;
+    public boolean structuralTransition() {
+        return false;
     }
 
 
@@ -359,6 +359,15 @@ public class Coupled extends Component {
             }
         }
         return rightBridge;
+    }
+
+    /**
+     * Remove a component, and related coupling relations from the coupled model.
+     * @param child The component to remove
+     */
+    protected void removeComponent(Component child) {
+        this.removePortsAndCouplings(child);
+        this.components.remove(child);
     }
 
     private void removePortsAndCouplings(Component child) {

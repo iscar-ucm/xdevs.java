@@ -27,28 +27,10 @@ import java.util.Collection;
 
 public abstract class Component {
 
-    /**
-     * Structural transition: specifies the type of structural transition that is to be performed.
-     */
-    public enum StructuralTransition {
-        FALSE,          // No structural transition
-        NEW_MODEL,      // Create model
-        DELETE_MODEL,   // Delete model
-        OTHER           // Other structural transition, no actions needed by the simulation layer
-    }
-
     // Component attributes
     /// Parent component
     protected Component parent = null;
     protected String name;
-    protected StructuralTransition structuralTransition = StructuralTransition.FALSE;
-    public void setStructuralTransition(StructuralTransition structuralTransition) {
-        this.structuralTransition = structuralTransition;
-    }
-
-    public StructuralTransition getStructuralTransition() {
-        return structuralTransition;
-    }
 
     protected ArrayList<Port<?>> inPorts = new ArrayList<>();
     protected ArrayList<Port<?>> outPorts = new ArrayList<>();

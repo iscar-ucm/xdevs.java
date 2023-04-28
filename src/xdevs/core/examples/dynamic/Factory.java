@@ -38,64 +38,73 @@ public class Factory extends Coupled {
     protected ArrayList<Machine> machines = new ArrayList<>();
     protected double processingTime;
     protected Transducer transducer;
-    protected int minimumIdleMachines;
+    protected int maxMachines;
 
-    public Factory(String name, double period, double processingTime, double observationTime, int minimumIdleMachines) {
+    public Factory(String name, double period, double processingTime, double observationTime, int maxMachines) {
     	super(name);
         this.processingTime = processingTime;
-        this.minimumIdleMachines = minimumIdleMachines;
+        this.maxMachines = maxMachines;
         // Generator
         Generator generator = new Generator("generator", period);
         super.addComponent(generator);
-        // Machines
-        ArrayList<Machine> machines = new ArrayList<>();
         // At least one machine
-        Machine machine = new Machine("machine-0", processingTime);
-        machines.add(machine);
-        super.addComponent(machine);
+        Machine machine0 = new Machine("machine-0", processingTime);
+        machines.add(machine0);
+        super.addComponent(machine0);
+        /*Machine machine1 = new Machine("machine-1", processingTime);
+        machines.add(machine1);
+        super.addComponent(machine1);*/
         // Transducer
         transducer = new Transducer("transducer", observationTime);
         super.addComponent(transducer);
         // Couplings
-        super.addCoupling(generator.oOut, machine.iJob);
+        super.addCoupling(generator.oOut, machine0.iJob);
         super.addCoupling(generator.oOut, transducer.iArrived);
-        super.addCoupling(machine.oJobSolved, transducer.iSolved);
+        super.addCoupling(machine0.oJobSolved, transducer.iSolved);
+        //super.addCoupling(machine0.oJobIgnored, machine1.iJob);
+        //super.addCoupling(machine1.oJobSolved, transducer.iSolved);
         super.addCoupling(transducer.oOut, generator.iStop);
     }
 
     @Override
-    public void structuralTransition() {
-        // CONTINUE HERE:
-        // Count idle machines
+    public boolean structuralTransition() {
+        boolean change = false;
+        // Count idle machines:
         int numIdle = 0;
         for(Machine machine : machines) {
             if(machine.phaseIs(Machine.PHASE_IDLE)) {
                 numIdle++;
             }
         }
-        // 1.- Remove idle machines:        
-        for(Machine machine : machines) {
-            if(machine.phaseIs(Machine.PHASE_IDLE)) {
+        // Remove idle machines and couplings, keeping at least one:
+        for (int i = machines.size() - 1; (i >= 0) && (numIdle > 1); i--) {
+            Machine machine = machines.get(i);
+            if (machine.phaseIs(Machine.PHASE_IDLE)) {
+                Machine prevMachine = machines.get(i - 1);
+                Machine nextMachine = (machines.size() > i + 1) ? machines.get(i + 1) : null;
+                if (nextMachine != null)
+                    super.addCoupling(prevMachine.oJobIgnored, nextMachine.iJob);
                 machines.remove(machine);
-                super.components.remove(machine);
+                super.removeComponent(machine);
+                numIdle--;
+                change = true;
             }
         }
-        if (machines.size()<=1)
-            return;
-        // If numIdle==0 we must add a new machine:
-        if (numIdle>=minimumIdleMachines) {
+        if (numIdle==0 && machines.size()<maxMachines) {
             Machine machine = new Machine("machine-" + machines.size(), processingTime);
             super.addComponent(machine);
-            super.addCoupling(machine.oJobSolved, transducer.iSolved);
             Machine prevMachine = machines.get(machines.size()-1);
             super.addCoupling(prevMachine.oJobIgnored, machine.iJob);
+            super.addCoupling(machine.oJobSolved, transducer.iSolved);
             machines.add(machine);
+            change = true;
         }
+        return change;
     }
 
     public static void main(String args[]) {
         DevsLogger.setup(Level.FINE);
-        Factory factory = new Factory("factory", 1.0, 3.0, 100.0, Integer.MAX_VALUE);
+        Factory factory = new Factory("factory", 1.0, 3.0, 100.0, 2);
         CoordinatorDynamic coordinator = new CoordinatorDynamic(factory);
         coordinator.initialize();
         coordinator.simulate(Long.MAX_VALUE);

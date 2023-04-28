@@ -35,7 +35,6 @@ public class Machine extends Atomic {
     public Port<Job> oJobIgnored = new Port<>("oJobIgnored");
     protected double processingTime;
     protected double busyTime;
-    protected double clock;
     protected Job processingJob;
     protected Job ignoringJob;
 
@@ -45,7 +44,6 @@ public class Machine extends Atomic {
         super.addOutPort(oJobSolved);
         super.addOutPort(oJobIgnored);
         this.processingTime = processingTime;
-        this.clock = 0;
 
     }
 
@@ -62,7 +60,6 @@ public class Machine extends Atomic {
 
     @Override
     public void deltint() {
-        clock += super.getSigma();
         if(super.phaseIs(Machine.PHASE_BUSY)) {
             processingJob = null;
             busyTime = 0.0;
@@ -77,12 +74,10 @@ public class Machine extends Atomic {
     @Override
     public void deltext(double e) {
         super.resume(e);
-        clock += e;
         Job job = iJob.getSingleValue();
         if (processingJob == null) {
             processingJob = job;
             super.holdIn(Machine.PHASE_BUSY, processingTime);
-            processingJob.setTime(clock);
         }
         else {
             ignoringJob = job;

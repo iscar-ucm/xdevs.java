@@ -30,6 +30,7 @@ import xdevs.core.modeling.Coupled;
 import xdevs.core.simulation.AbstractSimulator;
 import xdevs.core.simulation.Coordinator;
 import xdevs.core.simulation.SimulationClock;
+import xdevs.core.simulation.Simulator;
 import xdevs.core.util.DevsLogger;
 
 /**
@@ -46,6 +47,7 @@ public class CoordinatorDynamic extends Coordinator {
         super(model, false);
     }
     
+    @Override
     protected void buildHierarchy() {
           // Build hierarchy
         Collection<Component> components = model.getComponents();
@@ -54,7 +56,7 @@ public class CoordinatorDynamic extends Coordinator {
                 CoordinatorDynamic coordinator = new CoordinatorDynamic(clock, (Coupled) component);
                 simulators.add(coordinator);
             } else if (component instanceof Atomic) {
-                SimulatorDynamic simulator = new SimulatorDynamic(clock, (Atomic) component);
+                Simulator simulator = new Simulator(clock, (Atomic) component);
                 simulators.add(simulator);
             }
         });
@@ -66,9 +68,36 @@ public class CoordinatorDynamic extends Coordinator {
         for (AbstractSimulator simulator : simulators) {
             simulator.deltfcn();
         }
-        model.structuralTransition();
+        this.structuralTransition();
         tL = clock.getTime();
         tN = tL + ta();
+    }
+
+    /**
+     * Performs an structural transition if needed
+     */
+    public void structuralTransition() {
+        if(!model.structuralTransition())
+            return;
+        // Check if some models have been removed, and remove their simulators
+        Collection<Component> components = model.getComponents();
+        simulators.removeIf(simulator -> !components.contains(simulator.getModel()));
+        // Check if some models have been added, and add their simulators:
+        components.forEach(component -> {
+            if (component instanceof Coupled) {
+                if (simulators.stream().noneMatch(simulator -> simulator.getModel() == component)) {
+                    CoordinatorDynamic coordinator = new CoordinatorDynamic(clock, (Coupled) component);
+                    coordinator.initialize();
+                    simulators.add(coordinator);
+                }
+            } else if (component instanceof Atomic) {
+                if (simulators.stream().noneMatch(simulator -> simulator.getModel() == component)) {
+                    Simulator simulator = new Simulator(clock, (Atomic) component);
+                    simulator.initialize();
+                    simulators.add(simulator);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

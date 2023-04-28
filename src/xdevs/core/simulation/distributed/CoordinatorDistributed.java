@@ -72,7 +72,7 @@ public class CoordinatorDistributed extends Coordinator {
         for (Component component : model.getComponents()) {
             String host = ((CoupledDistributed) model).getHost(component.getName());
             Integer mainPort = ((CoupledDistributed) model).getMainPort(component.getName());
-            Integer auxPort = ((CoupledDistributed) model).getAuxPort(component.getName());
+            // Integer auxPort = ((CoupledDistributed) model).getAuxPort(component.getName());
             md = new MessageDistributed(Commands.EXIT, String.valueOf(clock.getTime()));
             pm = new PingMessage(md, host, mainPort);
             pm.ping();

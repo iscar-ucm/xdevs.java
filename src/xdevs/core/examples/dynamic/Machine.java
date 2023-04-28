@@ -26,11 +26,15 @@ import xdevs.core.modeling.Port;
 
 public class Machine extends Atomic {
 
+    public static final String PHASE_IDLE = "idle";
+    public static final String PHASE_BUSY = "busy";
+    public static final String PHASE_BUSY_IGNORING = "busy+ignoring";
+
     public Port<Job> iJob = new Port<>("iJob");
     public Port<Job> oJobSolved = new Port<>("oJobSolved");
     public Port<Job> oJobIgnored = new Port<>("oJobIgnored");
     protected double processingTime;
-    protected double ignoringTime;
+    protected double busyTime;
     protected double clock;
     protected Job processingJob;
     protected Job ignoringJob;
@@ -47,7 +51,7 @@ public class Machine extends Atomic {
 
     @Override
     public void initialize() {
-        super.passivate();
+        super.passivate(Machine.PHASE_IDLE);
         processingJob = null;
         ignoringJob = null;
     }
@@ -59,13 +63,14 @@ public class Machine extends Atomic {
     @Override
     public void deltint() {
         clock += super.getSigma();
-        if(super.phaseIs("busy")) {
+        if(super.phaseIs(Machine.PHASE_BUSY)) {
             processingJob = null;
-            super.passivate();
+            busyTime = 0.0;
+            super.passivate(Machine.PHASE_IDLE);
         }
-        else if(super.phaseIs("busy+ignoring")) {
+        else if(super.phaseIs(Machine.PHASE_BUSY_IGNORING)) {
             ignoringJob = null;
-            super.holdIn("busy", processingTime-ignoringTime);
+            super.holdIn(Machine.PHASE_BUSY, processingTime-busyTime);
         }
     }
 
@@ -76,22 +81,22 @@ public class Machine extends Atomic {
         Job job = iJob.getSingleValue();
         if (processingJob == null) {
             processingJob = job;
-            super.holdIn("busy", processingTime);
+            super.holdIn(Machine.PHASE_BUSY, processingTime);
             processingJob.setTime(clock);
         }
         else {
             ignoringJob = job;
-            ignoringTime = e;
-            super.holdIn("busy+ignoring", 0.0);            
+            busyTime += e;
+            super.holdIn(Machine.PHASE_BUSY_IGNORING, 0.0);            
         }
     }
 
     @Override
     public void lambda() {
-        if(super.phaseIs("busy")) {
+        if(super.phaseIs(Machine.PHASE_BUSY)) {
             oJobSolved.addValue(processingJob);
         }
-        else if(super.phaseIs("busy+ignoring")) {
+        else if(super.phaseIs(Machine.PHASE_BUSY_IGNORING)) {
             oJobIgnored.addValue(ignoringJob);
         }
     }

@@ -63,12 +63,8 @@ public class CoordinatorDynamic extends Coordinator {
     @Override
     public void deltfcn() {
         propagateInput();
-        // TODO: Continue here
-        boolean internalDynamicTransition = false;
         for (AbstractSimulator simulator : simulators) {
             simulator.deltfcn();
-            if(simulator.getModel().getStructuralTransition()!=Component.StructuralTransition.FALSE)
-                internalDynamicTransition = true; 
         }
         model.structuralTransition();
         tL = clock.getTime();

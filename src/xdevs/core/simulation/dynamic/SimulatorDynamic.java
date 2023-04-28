@@ -21,7 +21,6 @@
 package xdevs.core.simulation.dynamic;
 
 import xdevs.core.modeling.Atomic;
-import xdevs.core.modeling.Component;
 import xdevs.core.simulation.SimulationClock;
 import xdevs.core.simulation.Simulator;
 
@@ -34,7 +33,7 @@ public class SimulatorDynamic extends Simulator {
     public SimulatorDynamic(SimulationClock clock, Atomic model) {
         super(clock, model);
     }
-
+/*
     @Override
     public void deltfcn() {
         double t = clock.getTime();
@@ -50,8 +49,8 @@ public class SimulatorDynamic extends Simulator {
             model.deltint();
         else
             return;
-        model.structuralTransition();
+        // TODO: model.structuralTransition();
         tL = t;
         tN = tL + model.ta();
-    }
+    }*/
 }

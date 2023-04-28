@@ -56,6 +56,7 @@ public class Gpt extends Coupled {
         //RTCentralCoordinator coordinator = new RTCentralCoordinator(gpt);
         coordinator.initialize();
         coordinator.simulate(Long.MAX_VALUE);
+        coordinator.exit();
     }
 
 }

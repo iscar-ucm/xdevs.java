@@ -63,8 +63,8 @@ public class Port<E> {
         values.add(value);
     }
 
-    public void addValues(Collection<E> values) {
-        this.values.addAll(values);
+    public void addValues(Collection<E> valuesPort) {
+        this.values.addAll(valuesPort);
     }
 
     public Component getParent() {

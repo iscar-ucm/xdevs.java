@@ -6,7 +6,6 @@
 package xdevs.core.simulation.distributed;
 
 import java.util.concurrent.Callable;
-import xdevs.core.simulation.SimulationClock;
 
 /**
  *

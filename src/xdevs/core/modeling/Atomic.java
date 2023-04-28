@@ -76,6 +76,20 @@ public abstract class Atomic extends Component {
         this.sigma = Constants.INFINITY;
     }
 
+    /**
+     * Method to passivate the model in a given phase.
+     * @param phase The phase to passivate the model in.
+     */
+    public void passivate(String phase) {
+        this.phase = phase;
+        this.sigma = Constants.INFINITY;
+    }
+
+    /**
+     * This method is deprecated. Use passivate(String phase) instead.
+     * @param phase The phase to passivate the model in.
+     */
+    @Deprecated
     public void passivateIn(String phase) {
         this.phase = phase;
         this.sigma = Constants.INFINITY;

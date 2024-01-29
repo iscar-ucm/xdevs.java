@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2014-2016 José Luis Risco Martín <jlrisco@ucm.es>
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +13,7 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *  - José Luis Risco Martín
+ *  - José Luis Risco Martín <jlrisco@ucm.es>
  */
 package xdevs.core.examples.devstone;
 
@@ -102,18 +100,18 @@ public class DevStoneCoupledHO extends DevStone {
     }
 
     @Override
-    public long getNumDeltExts(int maxEvents, int width, int depth) {
+    public long numDeltExtsInTheory(int maxEvents, int width, int depth) {
         return maxEvents * (((width * width - width) / 2) * (depth - 1) + 1);
     }
 
     @Override
-    public long getNumDeltInts(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numDeltIntsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
 
     @Override
-    public long getNumOfEvents(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numEventsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
     
     public static void main(String[] args) {
@@ -127,11 +125,6 @@ public class DevStoneCoupledHO extends DevStone {
         double preparationTime = 0.0;
         double period = 1.0;
         int maxEvents = 1;
-
-        // Atomic number of internal and external transitions, as well as number of events
-        DevStoneAtomic.NUM_DELT_INTS = 0;
-        DevStoneAtomic.NUM_DELT_EXTS = 0;
-        DevStoneAtomic.NUM_OF_EVENTS = 0;
 
         Coupled framework = new Coupled(DevStoneCoupledHO.class.getSimpleName());
         // Generator
@@ -158,12 +151,12 @@ public class DevStoneCoupledHO extends DevStone {
         long end = System.currentTimeMillis();
         double time = (end - start) / 1000.0;
         LOGGER.info("MAXEVENTS;WIDTH;DEPTH;NUM_DELT_INTS;NUM_DELT_EXTS;NUM_OF_EVENTS;TIME");
-        String stats = maxEvents + ";" + width + ";" + depth + ";" + DevStoneAtomic.NUM_DELT_INTS + ";" + DevStoneAtomic.NUM_DELT_EXTS + ";" + DevStoneAtomic.NUM_OF_EVENTS + ";" + time;
+        String stats = maxEvents + ";" + width + ";" + depth + ";" + stoneCoupled.numDeltIntsInPractice() + ";" + stoneCoupled.numDeltExtsInPractice() + ";" + stoneCoupled.numEventsInPractice() + ";" + time;
         LOGGER.info(stats);        
     }
 
     @Override
-    public int getNumOfAtomic(int width, int depth) {
+    public int numAtomicsInTheory(int width, int depth) {
         return (width - 1) * (depth - 1) + 1;
     }
 

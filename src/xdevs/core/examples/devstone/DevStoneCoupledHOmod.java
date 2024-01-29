@@ -170,7 +170,7 @@ public class DevStoneCoupledHOmod extends DevStone {
     }
 
     @Override
-    public long getNumDeltExts(int maxEvents, int width, int depth) {
+    public long numDeltExtsInTheory(int maxEvents, int width, int depth) {
         long sum = 1;
         for (int i = 1; i < depth; i++) {
             sum += ((1+(i-1)*(width-1))*(width*(width-1)/2)+(width-1)*(width+(i-1)*(width-1)));
@@ -179,12 +179,12 @@ public class DevStoneCoupledHOmod extends DevStone {
     }
 
     @Override
-    public long getNumDeltInts(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numDeltIntsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
 
     @Override
-    public long getNumOfEvents(int maxEvents, int width, int depth) {
+    public long numEventsInTheory(int maxEvents, int width, int depth) {
         int w1 = width-1, w2 = width-2;
         int d0 = depth, d1 = depth-1, d2 = depth-2;
         long sum = 1 + 2*w1+w1*w1*d2*(2+w1*d1)+(w1*w1+(w2*w1)/2)*((2*d1+w1*d0*d1-2*w1*d1)/2);
@@ -192,7 +192,7 @@ public class DevStoneCoupledHOmod extends DevStone {
     }
 
     @Override
-    public int getNumOfAtomic(int width, int depth) {
+    public int numAtomicsInTheory(int width, int depth) {
         int sum = 0;
         for (int i = 1; i <= (width - 1); i++) {
             sum += i;

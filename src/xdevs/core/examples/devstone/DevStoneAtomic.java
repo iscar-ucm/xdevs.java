@@ -42,9 +42,9 @@ public class DevStoneAtomic extends Atomic {
     protected double intDelayTime;
     protected double extDelayTime;
     
-    public static long NUM_DELT_INTS = 0;
-    public static long NUM_DELT_EXTS = 0;
-    public static long NUM_OF_EVENTS = 0;
+    public long numDeltInts = 0;
+    public long numDeltExts = 0;
+    public long numOfEvents = 0;
     
     public DevStoneAtomic(String name, double preparationTime, double intDelayTime, double extDelayTime) {
         super(name);
@@ -76,7 +76,7 @@ public class DevStoneAtomic extends Atomic {
 
     @Override
     public void deltint() {
-        NUM_DELT_INTS++;
+        numDeltInts++;
         Dhrystone.execute(intDelayTime);
         super.passivate();
     }
@@ -84,10 +84,10 @@ public class DevStoneAtomic extends Atomic {
     @Override
     public void deltext(double e) {
         super.resume(e);
-        NUM_DELT_EXTS++;
+        numDeltExts++;
         Dhrystone.execute(extDelayTime);
         if (!iIn.isEmpty()) {
-            NUM_OF_EVENTS += iIn.getValues().size();
+            numOfEvents += iIn.getValues().size();
         }
         super.holdIn("active", preparationTime);
     }

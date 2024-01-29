@@ -248,9 +248,6 @@ public class DevStoneSimulation {
     private void runSimulation(double modelCreationTime) {
         if (coordinatorAsString == null)
             return;
-        DevStoneAtomic.NUM_DELT_INTS = 0;
-        DevStoneAtomic.NUM_DELT_EXTS = 0;
-        DevStoneAtomic.NUM_OF_EVENTS = 0;
         Coordinator coordinator = null;
         long coordStart = System.currentTimeMillis();
         if (coordinatorAsString.equals("CoordinatorProfile")) {
@@ -268,12 +265,11 @@ public class DevStoneSimulation {
         long coordStop = System.currentTimeMillis();
         double engineSetupTime = ((coordStop - coordStart) / 1e3);
         // Theoretical values
-        long numDeltInts = 0, numDeltExts = 0;
-        long numOfEvents = 0;
+        long numDeltIntsTheory = 0, numDeltExtsTheory = 0, numEventsTheory = 0;
         if (stone != null) {
-            numDeltInts = stone.getNumDeltInts(MAX_EVENTS, width, depth);
-            numDeltExts = stone.getNumDeltExts(MAX_EVENTS, width, depth);
-            numOfEvents = stone.getNumOfEvents(MAX_EVENTS, width, depth);
+            numDeltIntsTheory = stone.numDeltIntsInTheory(MAX_EVENTS, width, depth);
+            numDeltExtsTheory = stone.numDeltExtsInTheory(MAX_EVENTS, width, depth);
+            numEventsTheory = stone.numEventsInTheory(MAX_EVENTS, width, depth);
         }
         long simulationStart = System.currentTimeMillis();
         coordinator.simulate(Long.MAX_VALUE);
@@ -283,22 +279,28 @@ public class DevStoneSimulation {
         LOGGER.info(
                 "MODEL,MAXEVENTS,WIDTH,DEPTH,NUM_DELT_INTS,NUM_DELT_EXTS,NUM_OF_EVENTS,SIMULATION_TIME,MODEL_CREATION_TIME,ENGINE_SETUP_TIME");
         String stats = "";
-        if (DevStoneAtomic.NUM_DELT_INTS != numDeltInts)
-            LOGGER.severe(
-                    "ERROR: NUM_DELT_INTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_INTS + " [" + numDeltInts + "]");
-        if (DevStoneAtomic.NUM_DELT_EXTS != numDeltExts)
-            LOGGER.severe(
-                    "ERROR: NUM_DELT_EXTS [THEORICAL]: " + DevStoneAtomic.NUM_DELT_EXTS + " [" + numDeltExts + "]");
-        if (DevStoneAtomic.NUM_OF_EVENTS != numOfEvents)
-            LOGGER.severe(
-                    "ERROR: NUM_OF_EVENTS [THEORICAL]: " + DevStoneAtomic.NUM_OF_EVENTS + " [" + numOfEvents + "]");
+        long numDeltIntsPractice = 0, numDeltExtsPractice = 0, numEventsPractice = 0;
         if (stone != null) {
-            stats = model.toString() + "," + MAX_EVENTS + "," + width + "," + depth + "," + DevStoneAtomic.NUM_DELT_INTS
-                    + "," + DevStoneAtomic.NUM_DELT_EXTS + "," + DevStoneAtomic.NUM_OF_EVENTS + "," + simulationTime
+            numDeltIntsPractice = stone.numDeltIntsInPractice();
+            numDeltExtsPractice = stone.numDeltExtsInPractice();
+            numEventsPractice = stone.numEventsInPractice();
+        }
+        if (numDeltIntsPractice != numDeltIntsTheory)
+            LOGGER.severe(
+                    "ERROR: NUM_DELT_INTS [THEORICAL]: " + numDeltIntsPractice + " [" + numDeltIntsTheory + "]");
+        if (numDeltExtsPractice != numDeltExtsTheory)
+            LOGGER.severe(
+                    "ERROR: NUM_DELT_EXTS [THEORICAL]: " + numDeltExtsPractice + " [" + numDeltExtsTheory + "]");
+        if (numEventsPractice != numEventsTheory)
+            LOGGER.severe(
+                    "ERROR: NUM_OF_EVENTS [THEORICAL]: " + numEventsPractice + " [" + numEventsTheory + "]");
+        if (stone != null) {
+            stats = model.toString() + "," + MAX_EVENTS + "," + width + "," + depth + "," + numDeltIntsPractice
+                    + "," + numDeltExtsPractice + "," + numEventsPractice + "," + simulationTime
                     + "," + modelCreationTime + "," + engineSetupTime;
         } else {
-            stats = loadXml + "," + MAX_EVENTS + "," + 0 + "," + 0 + "," + -DevStoneAtomic.NUM_DELT_INTS + ","
-                    + -DevStoneAtomic.NUM_DELT_EXTS + "," + -DevStoneAtomic.NUM_OF_EVENTS + "," + simulationTime + ","
+            stats = loadXml + "," + MAX_EVENTS + "," + 0 + "," + 0 + "," + -numDeltIntsPractice + ","
+                    + -numDeltExtsPractice + "," + -numEventsPractice + "," + simulationTime + ","
                     + modelCreationTime + "," + engineSetupTime;
 
         }

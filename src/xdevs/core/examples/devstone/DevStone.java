@@ -19,6 +19,7 @@
  */
 package xdevs.core.examples.devstone;
 
+import xdevs.core.modeling.Component;
 import xdevs.core.modeling.Coupled;
 import xdevs.core.modeling.Port;
 
@@ -37,11 +38,47 @@ public abstract class DevStone extends Coupled {
         super.addOutPort(oOut);
     }
 
-    public abstract int getNumOfAtomic(int width, int depth);
+    public abstract int numAtomicsInTheory(int width, int depth);
 
-    public abstract long getNumDeltExts(int maxEvents, int width, int depth);
+    public abstract long numDeltExtsInTheory(int maxEvents, int width, int depth);
 
-    public abstract long getNumDeltInts(int maxEvents, int width, int depth);
+    public abstract long numDeltIntsInTheory(int maxEvents, int width, int depth);
 
-    public abstract long getNumOfEvents(int maxEvents, int width, int depth);
+    public abstract long numEventsInTheory(int maxEvents, int width, int depth);
+
+    public long numDeltExtsInPractice() {
+        long numDeltExts = 0;
+        for (Component c : super.getComponents()) {
+            if (c instanceof DevStoneAtomic) {
+                numDeltExts += ((DevStoneAtomic) c).numDeltExts;
+            } else if (c instanceof DevStone) {
+                numDeltExts += ((DevStone) c).numDeltExtsInPractice();
+            }
+        }
+        return numDeltExts;
+    }
+
+    public long numDeltIntsInPractice() {
+        long numDeltInts = 0;
+        for (Component c : super.getComponents()) {
+            if (c instanceof DevStoneAtomic) {
+                numDeltInts += ((DevStoneAtomic) c).numDeltInts;
+            } else if (c instanceof DevStone) {
+                numDeltInts += ((DevStone) c).numDeltIntsInPractice();
+            }
+        }
+        return numDeltInts;
+    }
+
+    public long numEventsInPractice() {
+        long numOfEvents = 0;
+        for (Component c : super.getComponents()) {
+            if (c instanceof DevStoneAtomic) {
+                numOfEvents += ((DevStoneAtomic) c).numOfEvents;
+            } else if (c instanceof DevStone) {
+                numOfEvents += ((DevStone) c).numEventsInPractice();
+            }
+        }
+        return numOfEvents;
+    }
 }

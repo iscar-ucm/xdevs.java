@@ -117,17 +117,17 @@ public class DevStoneCoupledHOmem extends DevStone {
     }
 
     @Override
-    public long getNumDeltExts(int maxEvents, int width, int depth) {
+    public long numDeltExtsInTheory(int maxEvents, int width, int depth) {
         return maxEvents * (1 + 2 * (depth - 1) * (width - 1));
     }
 
     @Override
-    public long getNumDeltInts(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numDeltIntsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
 
     @Override
-    public long getNumOfEvents(int maxEvents, int width, int depth) {
+    public long numEventsInTheory(int maxEvents, int width, int depth) {
         long numEvents = 1;
         int gamma1 = width - 1;
         for (int d = 1; d < depth; ++d) {
@@ -137,7 +137,7 @@ public class DevStoneCoupledHOmem extends DevStone {
     }
 
     @Override
-    public int getNumOfAtomic(int width, int depth) {
+    public int numAtomicsInTheory(int width, int depth) {
         return 2 * (width - 1) * (depth - 1) + 1;
     }
 

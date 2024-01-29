@@ -72,22 +72,22 @@ public class DevStoneCoupledLI extends DevStone {
     }
 
     @Override
-    public long getNumDeltExts(int maxEvents, int width, int depth) {
+    public long numDeltExtsInTheory(int maxEvents, int width, int depth) {
         return maxEvents * ((width - 1) * (depth - 1) + 1);
     }
 
     @Override
-    public long getNumDeltInts(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numDeltIntsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
 
     @Override
-    public long getNumOfEvents(int maxEvents, int width, int depth) {
-        return getNumDeltExts(maxEvents, width, depth);
+    public long numEventsInTheory(int maxEvents, int width, int depth) {
+        return numDeltExtsInTheory(maxEvents, width, depth);
     }
 
     @Override
-    public int getNumOfAtomic(int width, int depth) {
+    public int numAtomicsInTheory(int width, int depth) {
         return (width - 1) * (depth - 1) + 1;
     }
 }

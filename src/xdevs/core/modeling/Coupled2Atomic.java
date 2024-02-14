@@ -20,12 +20,15 @@
 
 package xdevs.core.modeling;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 import xdevs.core.examples.efp.Ef;
 import xdevs.core.examples.efp.Processor;
 import xdevs.core.simulation.Coordinator;
 import xdevs.core.util.Constants;
+import xdevs.core.util.DevsLogger;
 
 public class Coupled2Atomic extends Atomic {
     protected Coupled coupled;
@@ -54,13 +57,13 @@ public class Coupled2Atomic extends Atomic {
 
     @Override
     public void deltint() {
-        deltint(coupled);
+        deltfcn(super.getSigma(), coupled);
     }
 
     @Override
     public void deltext(double e) {
         super.resume(e);
-        deltext(e, coupled);
+        deltfcn(e, coupled);
     }
 
     @Override
@@ -94,16 +97,28 @@ public class Coupled2Atomic extends Atomic {
         }
     }
 
-    private void deltint(Coupled model) {
+    private void deltfcn(double e, Coupled model) {
+        if(!model.isInputEmpty())
+            propagateInput(model);
         for (Component component : model.getComponents()) {
             if (component instanceof Atomic) {
                 Atomic atomic = (Atomic)component;
-                if(atomic.getSigma()==super.getSigma())
-                    atomic.deltint();
+                if (!atomic.isInputEmpty()) {
+                    if (e == atomic.getSigma()) {
+                        atomic.deltcon(e);
+                    } 
+                    else {
+                        atomic.deltext(e);
+                    }
+                }
+                else if (e == atomic.getSigma()) {
+                        atomic.deltint();
+                }
             } else if (component instanceof Coupled) {
-                deltint((Coupled)component);
+                deltfcn(e, (Coupled)component);
             }
         }
+        clear(model);
     }
 
     private void lambda(Coupled model) {
@@ -124,22 +139,6 @@ public class Coupled2Atomic extends Atomic {
         eic.forEach((c) -> {
             c.propagateValues();
         });
-    }
-
-    private void deltext(double e, Coupled model) {
-        if (!model.isInputEmpty())
-            propagateInput(model);
-        for (Component component : model.getComponents()) {
-            if (component instanceof Atomic) {
-                Atomic atomic = (Atomic)component;
-                if(!atomic.isInputEmpty())
-                    atomic.deltext(e);
-                else
-                    atomic.resume(e);
-            } else if (component instanceof Coupled) {
-                deltext(e, (Coupled)component);
-            }
-        }
     }
 
     private void propagateOutput(Coupled model) {
@@ -172,7 +171,38 @@ public class Coupled2Atomic extends Atomic {
         return sigma;
     }
 
+    private void clear(Coupled model) {
+        for (Component component : model.getComponents()) {
+            if (component instanceof Atomic) {
+                Collection<Port<?>> inPorts;
+                inPorts = component.getInPorts();
+                inPorts.forEach((port) -> {
+                    port.clear();
+                });
+                Collection<Port<?>> outPorts;
+                outPorts = component.getOutPorts();
+                outPorts.forEach((port) -> {
+                    port.clear();
+                });    
+            }
+            else if (component instanceof Coupled) {
+                clear((Coupled)component);
+            }
+        }
+        Collection<Port<?>> inPorts;
+        inPorts = model.getInPorts();
+        inPorts.forEach((port) -> {
+            port.clear();
+        });
+        Collection<Port<?>> outPorts;
+        outPorts = model.getOutPorts();
+        outPorts.forEach((port) -> {
+            port.clear();
+        });
+    }
+
     public static void main(String[] args) {
+        DevsLogger.setup(Level.FINE);
         Coupled coupled = new Coupled("Coupled2Atomic-EFP");
         Processor processor = new Processor("processor", 3);
         coupled.addComponent(processor);

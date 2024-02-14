@@ -31,8 +31,8 @@ import xdevs.core.modeling.Port;
  */
 public class Processor extends Atomic {
 
-    protected Port<Job> iIn = new Port<>("iIn");
-    protected Port<Job> oOut = new Port<>("oOut");
+    protected Port<Job> iIn = new Port<>("in");
+    protected Port<Job> oOut = new Port<>("out");
     protected Job currentJob = null;
     protected double processingTime;
     protected double clock; // *

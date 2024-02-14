@@ -30,9 +30,9 @@ import xdevs.core.modeling.Port;
  */
 public class Ef extends Coupled {
 
-  protected Port<Job> iStart = new Port<>("iStart");
-  protected Port<Job> iIn = new Port<>("iIn");
-  protected Port<Job> oOut = new Port<>("oOut");
+  protected Port<Job> iStart = new Port<>("start");
+  protected Port<Job> iIn = new Port<>("in");
+  protected Port<Job> oOut = new Port<>("out");
 
   public Ef(String name, double period, double observationTime) {
 	  super(name);

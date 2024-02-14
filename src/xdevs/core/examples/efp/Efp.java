@@ -34,7 +34,7 @@ import xdevs.core.util.DevsLogger;
  */
 public class Efp extends Coupled {
 
-    protected Port<Job> iStart = new Port<>("iStart");
+    protected Port<Job> iStart = new Port<>("start");
 
     public Efp(String name, double generatorPeriod, double processorPeriod, double transducerPeriod) {
         super(name);

@@ -61,8 +61,14 @@ public class Coupled2Atomic extends Atomic {
     }
 
     @Override
-    public void deltext(double e) {
+    public void deltext(double e) {        
+        deltfcn(e, coupled);
+        // Important: super.resume(e) must go here, at the end.
         super.resume(e);
+    }
+
+    @Override
+    public void deltcon(double e) {
         deltfcn(e, coupled);
     }
 
@@ -107,7 +113,7 @@ public class Coupled2Atomic extends Atomic {
                     if (e == atomic.getSigma()) {
                         atomic.deltcon(e);
                     } 
-                    else {
+                    else {                        
                         atomic.deltext(e);
                     }
                 }

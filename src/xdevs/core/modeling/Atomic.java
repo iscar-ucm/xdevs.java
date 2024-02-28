@@ -24,30 +24,60 @@ package xdevs.core.modeling;
 import xdevs.core.util.Constants;
 
 /**
- *
- * @author José L. Risco Martín and Saurabh Mittal
+ * Abstract class for all atomic components in the DEVS formalism.
+ * 
+ * An atomic component is a model that can be connected to other components to
+ * form a hierarchical model. It has input and output ports to communicate with
+ * other components.
  */
 public abstract class Atomic extends Component {
 
-    // DevsAtomic attributes
+    /**
+     * The phase of the atomic model. The phase is used to determine the behavior
+     * of the model. Default values can be passive or active.
+     */
     protected String phase = Constants.PHASE_PASSIVE;
+    /**
+     * The time until the next internal transition of the model. The time is used
+     * to determine when the model will change its state. The time is set to
+     * infinity if the model is passive.
+     */
     protected double sigma = Constants.INFINITY;
 
+    /**
+     * Constructor of the atomic model.
+     * @param name The name of the atomic model.
+     */
     public Atomic(String name) {
         super(name);
     }
 
+    /**
+     * Constructor of the atomic model.
+     */
     public Atomic() {
         this(Atomic.class.getSimpleName());
     }
 
-    // DevsAtomic methods
+    /**
+     * Method to get the time until the next internal transition of the model.
+     * @return The time until the next internal transition of the model.
+     */
     public double ta() {
         return sigma;
     }
 
+    /**
+     * Internal transition method of the atomic model. This method is called when
+     * the time until the next internal transition of the model is zero.
+     */
     public abstract void deltint();
 
+    /**
+     * External transition method of the atomic model. This method is called when
+     * the model receives an input from another model.
+     * @param e The time elapsed since the last internal transition of the model.
+     */
     public abstract void deltext(double e);
 
     public void deltcon(double e) {
@@ -55,22 +85,41 @@ public abstract class Atomic extends Component {
         deltext(0);
     }
 
+    /**
+     * Output function of the atomic model. This method is called when the model
+     * has an output to send to another model.
+     */
     public abstract void lambda();
 
+    /**
+     * Method to updated sigma in the external transition function.
+     * @param e The time elapsed since the last internal transition of the model.
+     */
     public void resume(double e) {
         sigma = sigma - e;
     }
 
+    /**
+     * Method to hold the model in a given phase for a given time.
+     * @param phase The phase to hold the model in.
+     * @param sigma The time to hold the model in the phase.
+     */
     public void holdIn(String phase, double sigma) {
         this.phase = phase;
         this.sigma = sigma;
     }
 
+    /**
+     * Method to activate the model with sigma 0.
+     */
     public void activate() {
         this.phase = Constants.PHASE_ACTIVE;
         this.sigma = 0;
     }
 
+    /**
+     * Method to passivate the model with sigma infinity.
+     */
     public void passivate() {
         this.phase = Constants.PHASE_PASSIVE;
         this.sigma = Constants.INFINITY;
@@ -95,26 +144,51 @@ public abstract class Atomic extends Component {
         this.sigma = Constants.INFINITY;
     }
 
+    /**
+     * Method to check if the model is in a given phase.
+     * @param phase The phase to check.
+     * @return True if the model is in the given phase, false otherwise.
+     */
     public boolean phaseIs(String phase) {
         return this.phase.equals(phase);
     }
 
+    /**
+     * Method to get the phase of the model.
+     * @return The phase of the model.
+     */
     public String getPhase() {
         return phase;
     }
 
+    /**
+     * Method to set the phase of the model.
+     * @param phase The phase to set the model to.
+     */
     public final void setPhase(String phase) {
         this.phase = phase;
     }
 
+    /**
+     * Method to get the time until the next internal transition of the model.
+     * @return The time until the next internal transition of the model.
+     */
     public double getSigma() {
         return sigma;
     }
 
+    /**
+     * Method to set the time until the next internal transition of the model.
+     * @param sigma The time until the next internal transition of the model.
+     */
     public final void setSigma(double sigma) {
         this.sigma = sigma;
     }
 
+    /**
+     * Method to get the state of the model.
+     * @return The state of the model.
+     */
     public String showState() {
         StringBuilder sb = new StringBuilder(name + ":[");
         sb.append("\tstate: ").append(phase);
@@ -123,6 +197,10 @@ public abstract class Atomic extends Component {
         return sb.toString();
     }
 
+    /**
+     * Method to get the XML representation of the model.
+     * @return The XML representation of the model.
+     */
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         StringBuilder tabs = new StringBuilder();

@@ -23,32 +23,60 @@
 package xdevs.core.modeling;
 
 /**
- * @author José Luis Risco Martín
+ * Class for the couplings between components in the DEVS formalism.
+ * 
+ * A coupling is a connection between two ports of two different components. The
+ * coupling is used to propagate the values from the output port to the input
+ * port.
  */
 public class Coupling<E> {
 
+    /**
+     * The source port of the coupling.
+     */
     protected Port<E> portFrom;
+    /**
+     * The destination port of the coupling.
+     */
     protected Port<E> portTo;
 
+    /**
+     * Constructor of the coupling.
+     * @param portFrom The source port of the coupling.
+     * @param portTo The destination port of the coupling.
+     */
     public Coupling(Port<E> portFrom, Port<E> portTo) {
         this.portFrom = portFrom;
         this.portTo = portTo;
     }
 
+    /**
+     * Returns the string representation of the coupling.
+     */
     @Override
     public String toString() {
         return "(" + portFrom + "->" + portTo + ")";
     }
 
-    // Coupling members
+    /**
+     * Propagates the values from the source port to the destination port.
+     */
     public void propagateValues() {
         portTo.addValues(portFrom.getValues());
     }
 
+    /**
+     * Returns the source port of the coupling.
+     * @return The source port of the coupling.
+     */
     public Port<E> getPortFrom() {
         return portFrom;
     }
 
+    /**
+     * Returns the destination port of the coupling.
+     * @return The destination port of the coupling.
+     */
     public Port<E> getPortTo() {
         return portTo;
     }

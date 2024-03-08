@@ -30,9 +30,22 @@ import xdevs.core.simulation.Coordinator;
 import xdevs.core.util.Constants;
 import xdevs.core.util.DevsLogger;
 
+/**
+ * Class that makes a coupled model behave as an atomic model.
+ * 
+ * This class is used to simulate a coupled model as an atomic model.
+ */
 public class Coupled2Atomic extends Atomic {
+
+    /**
+     * The coupled model to simulate as an atomic model.
+     */
     protected Coupled coupled;
 
+    /**
+     * Constructor of the class.
+     * @param model The coupled model to simulate as an atomic model.
+     */
     public Coupled2Atomic(Coupled model) {
         super(model.getName());
         this.coupled = model;
@@ -43,7 +56,7 @@ public class Coupled2Atomic extends Atomic {
             super.addOutPort(port);
         }
     }
-
+    
     @Override
     public void initialize() {
         initialize(coupled);
@@ -83,6 +96,10 @@ public class Coupled2Atomic extends Atomic {
         return super.getSigma();
     }
 
+    /**
+     * Initializes the components of the coupled model.
+     * @param model The coupled model to initialize.
+     */
     private void initialize(Coupled model) {
         for (Component component : model.getComponents()) {
             if (component instanceof Atomic) {
@@ -93,6 +110,10 @@ public class Coupled2Atomic extends Atomic {
         }
     }
 
+    /**
+     * Called when the simulation ends.
+     * @param model The coupled model to exit.
+     */
     private void exit(Coupled model) {
         for (Component component : model.getComponents()) {
             if (component instanceof Atomic) {
@@ -103,6 +124,11 @@ public class Coupled2Atomic extends Atomic {
         }
     }
 
+    /**
+     * xDEVS-like transition function. This method decides the next transition function to execute.
+     * @param e The elapsed time.
+     * @param model The coupled model to execute the transition function.
+     */
     private void deltfcn(double e, Coupled model) {
         if(!model.isInputEmpty())
             propagateInput(model);
@@ -127,6 +153,10 @@ public class Coupled2Atomic extends Atomic {
         clear(model);
     }
 
+    /**
+     * Executes the output function of the components of the coupled model.
+     * @param model The coupled model to execute the output function.
+     */
     private void lambda(Coupled model) {
         for (Component component : model.getComponents()) {
             if (component instanceof Atomic) {
@@ -140,6 +170,10 @@ public class Coupled2Atomic extends Atomic {
         propagateOutput(model);
     }
 
+    /**
+     * Propagates the input values to the components of the coupled model.
+     * @param model The coupled model to propagate the input values.
+     */
     private void propagateInput(Coupled model) {
         LinkedList<Coupling<?>> eic = model.getEIC();
         eic.forEach((c) -> {
@@ -147,6 +181,10 @@ public class Coupled2Atomic extends Atomic {
         });
     }
 
+    /**
+     * Propagates the output values to the components of the coupled model.
+     * @param model The coupled model to propagate the output values.
+     */
     private void propagateOutput(Coupled model) {
         LinkedList<Coupling<?>> ic = model.getIC();
         ic.forEach((c) -> {
@@ -159,6 +197,11 @@ public class Coupled2Atomic extends Atomic {
         });
     }
 
+    /**
+     * Returns the time advance of the coupled model.
+     * @param model The coupled model to get the time advance.
+     * @return The time advance of the coupled model.
+     */
     private double ta(Coupled model) {
         double sigma = Constants.INFINITY;
         for (Component component : model.getComponents()) {
@@ -177,6 +220,10 @@ public class Coupled2Atomic extends Atomic {
         return sigma;
     }
 
+    /**
+     * Clears the input and output ports of the components of the coupled model.
+     * @param model The coupled model to clear the input and output ports.
+     */
     private void clear(Coupled model) {
         for (Component component : model.getComponents()) {
             if (component instanceof Atomic) {

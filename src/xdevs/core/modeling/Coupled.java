@@ -35,32 +35,62 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Class for the coupled models in the DEVS formalism.
+ * 
+ * A coupled model is a model that contains other models, and it is used to
+ * create hierarchical models. The coupled model can contain atomic models and
+ * other coupled models. The coupled model is used to create the structure of
+ * the DEVS model.
  */
 public class Coupled extends Component {
 
     private static final Logger LOGGER = Logger.getLogger(Coupled.class.getName());
 
-    // Coupled attributes
+    /**
+     * The components of the coupled model.
+     */
     protected LinkedList<Component> components = new LinkedList<>();
+    /**
+     * The input couplings of the coupled model.
+     */
     protected LinkedList<Coupling<?>> ic = new LinkedList<>();
+    /**
+     * The external input couplings of the coupled model.
+     */
     protected LinkedList<Coupling<?>> eic = new LinkedList<>();
+    /**
+     * The external output couplings of the coupled model.
+     */
     protected LinkedList<Coupling<?>> eoc = new LinkedList<>();
 
+    /**
+     * The constructor of the coupled model.
+     * @param name The name of the coupled model.
+     */
     public Coupled(String name) {
         super(name);
     }
 
+    /**
+     * The constructor of the coupled model.
+     */
     public Coupled() {
         this(Coupled.class.getSimpleName());
     }
 
+    /**
+     * The constructor of the coupled model.
+     * @param xmlCoupled The XML element that contains the information of the
+     *                   coupled model.
+     */
     public Coupled(Element xmlCoupled) {
         this(xmlCoupled.getAttribute("name"));
         this.addComponentsAndCouplings(xmlCoupled);
     }
 
+    /**
+     * This method is called by the simulator to initialize the DEVS component.
+     */
     @Override
     public void initialize() {
     }
@@ -74,15 +104,25 @@ public class Coupled extends Component {
     }
 
 
+    /**
+     * This method is called by the simulator right after the simulation ends.
+     */
     @Override
     public void exit() {
     }
 
+    /**
+     * Returns the parent of the DEVS component.
+     */
     @Override
     public Component getParent() {
         return parent;
     }
 
+    /**
+     * Sets the parent of the DEVS component.
+     * @param parent The parent of the DEVS component.
+     */
     @Override
     public void setParent(Component parent) {
         this.parent = parent;
@@ -116,11 +156,17 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * This method adds a input port to the DEVS component.
+     */
     @Override
     public void addInPort(Port<?> port) {
         super.addInPort(port);
     }
 
+    /**
+     * This method adds a output port to the DEVS component.
+     */
     @Override
     public void addOutPort(Port<?> port) {
         super.addOutPort(port);
@@ -150,6 +196,14 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * This method add a connection to the DEVS component.
+     *
+     * @param cFromName Name of the component at the beginning of the connection
+     * @param pFromName Name of the port at the beginning of the connection
+     * @param cToName   Name of the component at the end of the connection
+     * @param pToName   Name of the port at the end of the connection
+     */
     public final void addCoupling(String cFromName, String pFromName, String cToName, String pToName) {
         Component cFrom = this.getComponentByName(cFromName);
         Component cTo = this.getComponentByName(cToName);
@@ -214,6 +268,10 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * Get the components of the coupled model.
+     * @return The components of the coupled model.
+     */
     public Collection<Component> getComponents() {
         return components;
     }
@@ -240,25 +298,43 @@ public class Coupled extends Component {
         return null;
     }
 
+    /**
+     * Adds a component to the coupled model.
+     * @param component The component to add to the coupled model.
+     */
     public final void addComponent(Component component) {
         component.setParent(this);
         components.add(component);
     }
 
+    /**
+     * Get the input couplings of the coupled model.
+     * @return The input couplings of the coupled model.
+     */
     public LinkedList<Coupling<?>> getIC() {
         return ic;
     }
 
+    /**
+     * Get the external input couplings of the coupled model.
+     * @return The external input couplings of the coupled model.
+     */
     public LinkedList<Coupling<?>> getEIC() {
         return eic;
     }
 
+    /**
+     * Get the external output couplings of the coupled model.
+     * @return The external output couplings of the coupled model.
+     */
     public LinkedList<Coupling<?>> getEOC() {
         return eoc;
     }
 
     /**
-     * @return The new DEVS coupled model
+     * This method flattens the coupled model, removing all the coupled models and
+     * adding their components to the parent coupled model.
+     * @return this, as the coupled model after the flattening.
      */
     public Coupled flatten() {
         List<Coupled> toFlatten = new ArrayList<>();
@@ -301,6 +377,12 @@ public class Coupled extends Component {
         return this;
     }
 
+    /**
+     * Auxiliary method for the flatten method.
+     * @param couplings The couplings to process
+     * @param leftBridge The left bridge to complete
+     * @param pCouplings The couplings of the parent
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void completeLeftBridge(LinkedList<Coupling<?>> couplings, HashMap<Port<?>, LinkedList<Port<?>>> leftBridge,
             LinkedList<Coupling<?>> pCouplings) {
@@ -314,6 +396,12 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * Auxiliary method for the flatten method.
+     * @param couplings The couplings to process
+     * @param rightBridge The right bridge to complete
+     * @param pCouplings The couplings of the parent
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void completeRightBridge(LinkedList<Coupling<?>> couplings,
             HashMap<Port<?>, LinkedList<Port<?>>> rightBridge, LinkedList<Coupling<?>> pCouplings) {
@@ -327,6 +415,11 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * Auxiliary method for the flatten method.
+     * @param couplings The couplings to process
+     * @return The left bridge
+     */
     private HashMap<Port<?>, LinkedList<Port<?>>> createLeftBrige(LinkedList<Coupling<?>> couplings) {
         HashMap<Port<?>, LinkedList<Port<?>>> leftBridge = new HashMap<>();
         for (Port<?> iPort : this.inPorts) {
@@ -344,6 +437,11 @@ public class Coupled extends Component {
         return leftBridge;
     }
 
+    /**
+     * Auxiliary method for the flatten method.
+     * @param couplings The couplings to process
+     * @return The right bridge
+     */
     private HashMap<Port<?>, LinkedList<Port<?>>> createRightBrige(LinkedList<Coupling<?>> couplings) {
         HashMap<Port<?>, LinkedList<Port<?>>> rightBridge = new HashMap<>();
         for (Port<?> oPort : this.outPorts) {
@@ -370,6 +468,10 @@ public class Coupled extends Component {
         this.components.remove(child);
     }
 
+    /**
+     * Remove the ports and couplings related to a component.
+     * @param child The component to remove
+     */
     private void removePortsAndCouplings(Component child) {
         Collection<Port<?>> inPorts = child.getInPorts();
         for (Port<?> iport : inPorts) {
@@ -403,6 +505,10 @@ public class Coupled extends Component {
         }
     }
 
+    /**
+     * This method returns the XML representation of the coupled model.
+     * @return The XML representation of the coupled model.
+     */
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         StringBuilder tabs = new StringBuilder();
@@ -445,6 +551,10 @@ public class Coupled extends Component {
         return builder.toString();
     }
 
+    /**
+     * This method returns the number of atomic components in the coupled model.
+     * @return The number of atomic components in the coupled model.
+     */
     public int countAtomicComponents() {
         int res = 0;
         for (Component component : components) {
@@ -457,6 +567,11 @@ public class Coupled extends Component {
         return res;
     }
 
+    /**
+     * Given a XML representation of a coupled model, this method adds the
+     * components and couplings to the current coupled model.
+     * @param xmlCoupled The XML representation of the coupled model.
+     */
     protected void addComponentsAndCouplings(Element xmlCoupled) {
         // Creamos los distintos elementos
         NodeList xmlChildList = xmlCoupled.getChildNodes();

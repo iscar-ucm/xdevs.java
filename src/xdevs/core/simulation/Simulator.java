@@ -28,13 +28,25 @@ import xdevs.core.modeling.Port;
 import xdevs.core.modeling.Atomic;
 
 /**
- *
- * @author José Luis Risco Martín
+ * This class represents a parallel DEVS simulator, in xDEVS style.
+ * 
+ * The simulator is responsible for the simulation of a DEVS model, and it is composed of
+ * a simulation clock and the model to simulate. The simulator is responsible for the
+ * initialization, execution and termination of the simulation.
  */
 public class Simulator extends AbstractSimulator {
 
+    /**
+     * The model to simulate.
+     */
     protected Atomic model;
 
+    /**
+     * Creates a new simulator with the given simulation clock and model.
+     * 
+     * @param clock the simulation clock of the simulator.
+     * @param model the model to simulate.
+     */
     public Simulator(SimulationClock clock, Atomic model) {
         super(clock);
         this.model = model;

@@ -28,23 +28,36 @@ import xdevs.core.modeling.Port;
 import xdevs.core.util.Constants;
 
 /**
- * This controller has been created to control the simulation in GUI-based environments
- * @author José Luis Risco Martín
+ * This controller has been created to control the simulation in GUI-based environments.
  */
 public class Controller extends Thread {
 
     private static final Logger LOGGER = Logger.getLogger(Controller.class.getName());
 
+    /**
+     * The coordinator of the simulation.
+     */
     protected Coordinator coordinator;
+    /**
+     * A guard variable to suspend the simulation.
+     */
     private boolean suspended = false;
+    /**
+     * The final time of the simulation.
+     */
     protected double tF = Constants.INFINITY;
 
+    /**
+     * Creates a new controller with the given coordinator.
+     * @param coordinator the coordinator of the simulation.
+     */
     public Controller(Coordinator coordinator) {
         this.coordinator = coordinator;
     }
 
- /**
+    /**
      * Starts the simulation, initializing the coordinator
+     * 
      * @param timeInterval Simulation time interval, in seconds
      */
     public void startSimulation(double timeInterval) {
@@ -55,7 +68,6 @@ public class Controller extends Thread {
 
     /**
      * Runs the simulation during a given time interval
-     * @see #startSimulation(double) 
      */
     public void runSimulation() {
         super.start();
@@ -102,7 +114,6 @@ public class Controller extends Thread {
      * @param e Elapsed time
      * @param port Input port
      * @param values Set of values
-     * @see xdevs.core.simulation.api.CoordinatorInterface#simInject(double, mitris.sim.core.modeling.InPort, java.util.Collection) 
      */
     public void simInject(double e, Port<Object> port, Collection<Object> values) {
         coordinator.simInject(e, port, values);
@@ -112,7 +123,6 @@ public class Controller extends Thread {
      * Injects a value into the port "port", calling the transition function.
      * @param port Input port
      * @param values Set of values
-     * @see xdevs.core.simulation.api.CoordinatorInterface#simInject(mitris.sim.core.modeling.InPort, java.util.Collection) 
      */
     public void simInject(Port<Object> port, Collection<Object> values) {
         coordinator.simInject(port, values);
@@ -122,8 +132,7 @@ public class Controller extends Thread {
      * Injects a single value into the port "port", calling the transition function.
      * @param e Elapsed time
      * @param port Input port
-     * @param value Set of values
-     * @see xdevs.core.simulation.api.CoordinatorInterface#simInject(double, mitris.sim.core.modeling.InPort, java.lang.Object) 
+     * @param value value to inject
      */
     public void simInject(double e, Port<Object> port, Object value) {
         coordinator.simInject(e, port, value);
@@ -132,8 +141,7 @@ public class Controller extends Thread {
     /**
      * Injects a single value into the port "port", calling the transition function.
      * @param port Input port
-     * @param value Set of values
-     * @see xdevs.core.simulation.Coordinator#simInject(xdevs.core.modeling.Port, java.lang.Object)
+     * @param value value to inject
      */
     public void simInject(Port<Object> port, Object value) {
         coordinator.simInject(port, value);

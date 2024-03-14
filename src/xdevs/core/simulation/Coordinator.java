@@ -37,17 +37,40 @@ import xdevs.core.util.Constants;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author José Luis Risco Martín
+ * This class represents a parallel DEVS coordinator, in xDEVS style.
+ * 
+ * The coordinator is responsible for the simulation of a DEVS model, and it is composed of
+ * a simulation clock and the model to simulate. The coordinator is responsible for the
+ * initialization, execution and termination of the simulation.
  */
 public class Coordinator extends AbstractSimulator {
 
     private static final Logger LOGGER = Logger.getLogger(Coordinator.class.getName());
 
+    /**
+     * The model to simulate.
+     */
     protected Coupled model;
+    /**
+     * The simulators of the components of the model.
+     */
     protected LinkedList<AbstractSimulator> simulators = new LinkedList<>();
-    long totalIterations = 0, countIterations = 0;
+    /**
+     * The total number of iterations to simulate.
+     */
+    long totalIterations = 0;
+    /**
+     * The current number of iterations simulated.
+     */
+    long countIterations = 0;
 
+    /**
+     * Creates a new coordinator with the given simulation clock and model.
+     * 
+     * @param clock the simulation clock of the coordinator.
+     * @param model the model to simulate.
+     * @param flatten if true, the model is flattened before simulation.
+     */
     public Coordinator(SimulationClock clock, Coupled model, boolean flatten) {
         super(clock);
         if (flatten) {
@@ -57,18 +80,35 @@ public class Coordinator extends AbstractSimulator {
         }
     }
     
+    /**
+     * Creates a new coordinator with the given simulation clock and model, not flattened.
+     * @param clock the simulation clock of the coordinator.
+     * @param model the model to simulate.
+     */
     public Coordinator(SimulationClock clock, Coupled model) {
         this(clock, model, false);
     }
 
+    /**
+     * Creates a new coordinator with the given model and whether to flatten it or not.
+     * @param model the model to simulate.
+     * @param flatten if true, the model is flattened before simulation.
+     */
     public Coordinator(Coupled model, boolean flatten) {
         this(new SimulationClock(), model, flatten);
     }
 
+    /**
+     * Creates a new coordinator with the given model, not flattened.
+     * @param model the model to simulate.
+     */
     public Coordinator(Coupled model) {
         this(model, false);
     }
     
+    /**
+     * Builds the hierarchy of simulators for the model.
+     */
     protected void buildHierarchy() {
           // Build hierarchy
         Collection<Component> components = model.getComponents();
@@ -100,6 +140,10 @@ public class Coordinator extends AbstractSimulator {
         });
     }
 
+    /**
+     * Returns the simulators of the components of the model.
+     * @return the simulators of the components of the model.
+     */
     public Collection<AbstractSimulator> getSimulators() {
         return simulators;
     }
@@ -123,6 +167,13 @@ public class Coordinator extends AbstractSimulator {
         propagateOutput();
     }
 
+    /**
+     * Propagates the output of the model.
+     * 
+     * This method is called after the lambda function of the simulators, and it
+     * propagates the output of the models to the input of the components connected
+     * to the previuous output ports.
+     */
     public void propagateOutput() {
         LinkedList<Coupling<?>> ic = model.getIC();
         ic.forEach((c) -> {
@@ -145,6 +196,13 @@ public class Coordinator extends AbstractSimulator {
         tN = tL + ta();
     }
 
+    /**
+     * Propagates the input of the model.
+     * 
+     * This method is called before the delta function of the simulators, and it
+     * propagates the input of the models to the input of the components connected
+     * to the previuous input ports.
+     */
     public void propagateInput() {
         LinkedList<Coupling<?>> eic = model.getEIC();
         eic.forEach((c) -> {
@@ -189,7 +247,9 @@ public class Coordinator extends AbstractSimulator {
     }
 
     /**
-     * @see xdevs.core.simulation.Coordinator#simInject(double, xdevs.core.modeling.Port, java.util.Collection) 
+     * Injects a set of values in the given input port with elapsed time e equal
+     * to 0.
+     *
      * @param port input port to inject the set of values
      * @param values set of values to inject
      */
@@ -200,10 +260,9 @@ public class Coordinator extends AbstractSimulator {
     /**
      * Injects a single value in the given input port with elapsed time e.
      *
-     * @see xdevs.core.simulation.Coordinator#simInject(double, xdevs.core.modeling.Port, java.util.Collection) 
-     * @param e
-     * @param port
-     * @param value
+     * @param e elapsed time
+     * @param port input port to inject the value
+     * @param value value to inject
      */
     public void simInject(double e, Port<Object> port, Object value) {
         LinkedList<Object> values = new LinkedList<>();
@@ -215,14 +274,17 @@ public class Coordinator extends AbstractSimulator {
      * Injects a single value in the given input port with elapsed time e equal
      * to 0.
      *
-     * @see xdevs.core.simulation.Coordinator#simInject(double, xdevs.core.modeling.Port, java.util.Collection) 
-     * @param port
-     * @param value
+     * @param port input port to inject the value
+     * @param value value to inject
      */
     public void simInject(Port<Object> port, Object value) {
         simInject(0.0, port, value);
     }
 
+    /**
+     * This function is used to simulate the model for a given number of iterations.
+     * @param numIterations the number of iterations to simulate.
+     */
     public void simulate(long numIterations) {
         LOGGER.fine("START SIMULATION");
         totalIterations += numIterations;
@@ -235,6 +297,10 @@ public class Coordinator extends AbstractSimulator {
         }
     }
 
+    /**
+     * This function is used to simulate the model for a given time interval.
+     * @param timeInterval the time interval to simulate.
+     */
     public void simulate(double timeInterval) {
         LOGGER.fine("START SIMULATION");
         //clock.setTime(tN);

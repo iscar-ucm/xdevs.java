@@ -1,8 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* File: CoupledDistributed.java
+* Author: José Luis Risco Martín <jlrisco@ucm.es>
+* Created: 2024/03/14 (YYYY/MM/DD)
+*
+* Copyright (C) 2024
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package xdevs.core.modeling.distributed;
 
 import java.io.File;
@@ -25,18 +40,58 @@ import xdevs.core.simulation.distributed.CoordinatorDistributed;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author Almendras
+ * This class represents a distributed coupled model.
+ * 
+ * The model is defined in an XML file with the following structure:
+ * <pre>
+ * {@code
+ * <coupled name="GPT" class="xdevs.core.examples.efp.Efp" host="192.168.1.3" mainPort="5000" auxPort="6000">
+ * 	<atomic name="processor" class="xdevs.core.examples.efp.Processor" host="192.168.1.4" mainPort="5001" auxPort="6001">
+ * 		<constructor-arg value="3.0"/>
+ * 	</atomic>
+ * 	<atomic name="generator" class="xdevs.core.examples.efp.Generator" host="192.168.1.5" mainPort="5002" auxPort="6002">
+ * 		<constructor-arg value="1.0"/>
+ * 	</atomic>
+ * 	<atomic name="transducer" class="xdevs.core.examples.efp.Transducer" host="192.168.1.6" mainPort="5003" auxPort="6003">
+ * 		<constructor-arg value="100.0"/>
+ * 	</atomic>
+ * 	<connection componentFrom="processor" portFrom="oOut" componentTo="transducer" portTo="iSolved"/>
+ * 	<connection componentFrom="generator" portFrom="oOut" componentTo="processor" portTo="iIn"/>
+ * 	<connection componentFrom="generator" portFrom="oOut" componentTo="transducer" portTo="iArrived"/>
+ * 	<connection componentFrom="transducer" portFrom="oOut" componentTo="generator" portTo="iStop"/>
+ * </coupled>
+ * }
+ * </pre>
+ * 
+ * The model is composed of atomic components and connections between them.
+ * The model is executed by a distributed coordinator class.
  */
 public class CoupledDistributed extends Coupled {
 
     private static final Logger LOGGER = Logger.getLogger(CoupledDistributed.class.getName());
 
+    /**
+     * XML element with the model definition.
+     */
     protected Element xmlCoupled;
+    /**
+     * Hosts of the components.
+     */
     protected HashMap<String, String> hosts = new HashMap<>();
+    /**
+     * Main ports of the components.
+     */
     protected HashMap<String, Integer> mainPorts = new HashMap<>();
+    /**
+     * Auxiliary ports of the components.
+     */
     protected HashMap<String, Integer> auxPorts = new HashMap<>();
 
+    /**
+     * Constructor of the class.
+     * 
+     * @param xmlCoupled XML element with the model definition.
+     */
     public CoupledDistributed(Element xmlCoupled) {
         super(xmlCoupled.getAttribute("name"));
         hosts.put(xmlCoupled.getAttribute("name"), xmlCoupled.getAttribute("host"));
@@ -77,14 +132,29 @@ public class CoupledDistributed extends Coupled {
 
     }
 
+    /**
+     * Get the host of a component.
+     * @param componentName Name of the component.
+     * @return Host of the component.
+     */
     public String getHost(String componentName) {
         return hosts.get(componentName);
     }
 
+    /**
+     * Get the main port of a component.
+     * @param componentName Name of the component.
+     * @return Main port of the component.
+     */
     public Integer getMainPort(String componentName) {
         return mainPorts.get(componentName);
     }
 
+    /**
+     * Get the auxiliary port of a component.
+     * @param componentName Name of the component.
+     * @return Auxiliary port of the component.
+     */
     public Integer getAuxPort(String componentName) {
         return auxPorts.get(componentName);
     }

@@ -23,25 +23,45 @@
 package xdevs.core.simulation;
 
 /**
- *
- * @author jlrisco
+ * This class represents the simulation clock.
+ * 
+ * The simulation clock is a double value that represents the current time of the simulation.
  */
 public class SimulationClock {
 
+    /**
+     * The current time of the simulation.
+     */
     protected double time;
 
+    /**
+     * Creates a new simulation clock with the given initial time.
+     * 
+     * @param time the initial time of the simulation.
+     */
     public SimulationClock(double time) {
         this.time = time;
     }
 
+    /**
+     * Creates a new simulation clock with initial time 0.
+     */
     public SimulationClock() {
         this(0);
     }
 
+    /**
+     * Gets the current simulation time.
+     * @return the current simulation time.
+     */
     public double getTime() {
         return time;
     }
-    
+
+    /**
+     * Sets the current simulation time.
+     * @param time the new simulation time.
+     */
     public void setTime(double time) {
         this.time = time;
     }

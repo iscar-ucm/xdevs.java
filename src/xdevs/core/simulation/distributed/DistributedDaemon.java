@@ -1,8 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* File: DistributedDaemon.java
+* Author: José Luis Risco Martín <jlrisco@ucm.es>
+* Created: 2024/03/20 (YYYY/MM/DD)
+*
+* Copyright (C) 2024
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 package xdevs.core.simulation.distributed;
 
 import java.io.IOException;
@@ -15,28 +30,42 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
+ * Daemon for distributed simulation
  *
- * @author Almendras
+ * This class implements a daemon for distributed simulation. It listens for
+ * incoming connections and processes the messages received.
  */
 public class DistributedDaemon {
-    // DistributedDaemon attributes 
+    private static final Logger LOGGER = Logger.getLogger(DistributedDaemon.class.getName());
+    /**
+     * Port for the daemon
+     */
     private int port;
+    /**
+     * Simulator for the daemon
+     */
     private SimulatorDistributed sd;
     
-    // DistributedDaemon constructors
+    /**
+     * Constructor for the distributed daemon.
+     * @param port Port for the daemon
+     * @param sd Simulator for the daemon
+     */
     public DistributedDaemon(int port, SimulatorDistributed sd){
         this.port = port;
         this.sd = sd;
     }
     
+    /**
+     * Start the daemon
+     */
     public void start() {
-        //ArrayBlockingQueue<Socket> queue = new ArrayBlockingQueue<>(20);
         BlockingDeque<Socket> queue = new LinkedBlockingDeque<>();
 
         Thread producer = new Thread(() -> {
-            //System.out.println("Producer starting...");
             try {
                 ServerSocketChannel ssc = ServerSocketChannel.open();
                 ssc.socket().bind(new InetSocketAddress(port));
@@ -50,16 +79,13 @@ public class DistributedDaemon {
                     }
                 }
                 ssc.close();
-                //System.out.println("Producer stopping...");
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.severe(e.getLocalizedMessage());
             }
         });
 
         Thread consumer = new Thread(() -> {
             try {
-                //System.out.println("Consumer starting...");
-
                 while(!sd.isGetOut()) {
                     Socket socket = queue.poll(100, TimeUnit.MILLISECONDS);
                     if(socket!=null) {
@@ -72,12 +98,10 @@ public class DistributedDaemon {
                         socket.close();
                     }
                 }
-                //System.out.println("Consumer stopping...");
             } catch (InterruptedException | IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                LOGGER.severe(e.getLocalizedMessage());
             }
         });
-
         producer.start();
         consumer.start();
     }    

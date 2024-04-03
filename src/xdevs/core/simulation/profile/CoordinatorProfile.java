@@ -35,8 +35,9 @@ import xdevs.core.examples.efp.Efp;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Coordinator to perform a profiling of the simulation.
+ * 
+ * This class implements a coordinator to perform a profiling of the simulation.
  */
 public class CoordinatorProfile extends Coordinator {
 
@@ -72,10 +73,19 @@ public class CoordinatorProfile extends Coordinator {
     protected long timeUsedByPropagateInput = 0;
     protected double executionTime = 0.0;
 
+    /**
+     * Constructor for the profile coordinator.
+     * @param clock Simulation clock
+     * @param model Coupled model
+     */
     public CoordinatorProfile(SimulationClock clock, Coupled model) {
         super(clock, model);
     }
 
+    /**
+     * Constructor for the profile coordinator.
+     * @param model Coupled model
+     */
     public CoordinatorProfile(Coupled model) {
         super(model);
     }

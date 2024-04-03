@@ -35,8 +35,9 @@ import xdevs.core.examples.efp.Efp;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author jlrisco
+ * Parallel coordinator
+ * 
+ * This class implements a parallel coordinator for DEVS models.
  */
 public class CoordinatorParallel extends Coordinator {
 
@@ -47,20 +48,40 @@ public class CoordinatorParallel extends Coordinator {
     protected LinkedList<TaskDeltFcn> deltfcnTasks = new LinkedList<>();
     protected ExecutorService executor;
 
+    /**
+     * Constructor for the parallel coordinator.
+     * @param clock Simulation clock
+     * @param model Coupled model
+     * @param numberOfThreads Number of threads
+     */
     public CoordinatorParallel(SimulationClock clock, Coupled model, int numberOfThreads) {
         super(clock, model, true);
         this.numberOfThreads = numberOfThreads;
         executor = Executors.newFixedThreadPool(numberOfThreads);
     }
 
+    /**
+     * Constructor for the parallel coordinator.
+     * @param model Coupled model
+     * @param numberOfThreads Number of threads
+     */
     public CoordinatorParallel(Coupled model, int numberOfThreads) {
         this(new SimulationClock(), model, numberOfThreads);
     }
 
+    /**
+     * Constructor for the parallel coordinator. It uses the number of available processors.
+     * @param model Coupled model
+     */
     public CoordinatorParallel(Coupled model) {
         this(new SimulationClock(), model, Runtime.getRuntime().availableProcessors());
     }
 
+    /**
+     * Constructor for the parallel coordinator. It uses the number of available processors.
+     * @param clock Simulation clock
+     * @param model Coupled model
+     */
     public CoordinatorParallel(SimulationClock clock, Coupled model) {
         this(clock, model, Runtime.getRuntime().availableProcessors());
     }

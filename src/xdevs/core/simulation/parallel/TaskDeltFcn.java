@@ -25,13 +25,18 @@ import java.util.concurrent.Callable;
 import xdevs.core.simulation.AbstractSimulator;
 
 /**
- *
- * @author jlrisco
+ * Parallel task for the transition function
+ * 
+ * This class implements a task for the transition function of a parallel simulator.
  */
 public class TaskDeltFcn implements Callable<Double> {
 
     protected AbstractSimulator simulator;
 
+    /**
+     * Constructor for the task.
+     * @param simulator DEVS simulator
+     */
     public TaskDeltFcn(AbstractSimulator simulator) {
         this.simulator = simulator;
     }

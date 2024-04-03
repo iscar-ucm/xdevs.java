@@ -34,15 +34,27 @@ import xdevs.core.simulation.Simulator;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Dynamic coordinator
+ * 
+ * This class implements a dynamic coordinator for variable structure DEVS models.
  */
 public class CoordinatorDynamic extends Coordinator {
 
+    /**
+     * Constructor for the dynamic coordinator.
+     *
+     * @param clock Simulation clock
+     * @param model Coupled model
+     */
     public CoordinatorDynamic(SimulationClock clock, Coupled model) {
         super(clock, model, false);
     }
 
+    /**
+     * Constructor for the dynamic coordinator.
+     *
+     * @param model Coupled model
+     */
     public CoordinatorDynamic(Coupled model) {
         super(model, false);
     }
@@ -74,7 +86,9 @@ public class CoordinatorDynamic extends Coordinator {
     }
 
     /**
-     * Performs an structural transition if needed
+     * Perform a structural transition in the model.
+     * 
+     * This method checks if the model has changed its structure, and updates the simulators accordingly.
      */
     public void structuralTransition() {
         if(!model.structuralTransition())

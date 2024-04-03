@@ -26,13 +26,18 @@ import java.util.concurrent.Callable;
 import xdevs.core.simulation.AbstractSimulator;
 
 /**
- *
- * @author jlrisco
+ * Parallel task for the lambda function
+ * 
+ * This class implements a task for the lambda function of a parallel simulator.
  */
 public class TaskLambda implements Callable<Double> {
     
     protected AbstractSimulator simulator;
     
+    /**
+     * Constructor for the task.
+     * @param simulator DEVS simulator
+     */
     public TaskLambda(AbstractSimulator simulator) {
         this.simulator = simulator;
     }

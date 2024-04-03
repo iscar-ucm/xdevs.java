@@ -33,8 +33,9 @@ import xdevs.core.examples.efp.Efp;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author jlrisco
+ * Real-time central coordinator
+ * 
+ * This class implements a real-time central coordinator for DEVS models.
  */
 public class RTCentralCoordinator extends CoordinatorParallel implements Runnable {
 
@@ -43,6 +44,10 @@ public class RTCentralCoordinator extends CoordinatorParallel implements Runnabl
     protected Thread myThread;
     protected int timeScale = 1000;
 
+    /**
+     * Constructor for the real-time central coordinator.
+     * @param model Coupled model
+     */
     public RTCentralCoordinator(Coupled model) {
         super(new SimulationClock(System.currentTimeMillis() / 1000.0), model);
     }
@@ -54,6 +59,10 @@ public class RTCentralCoordinator extends CoordinatorParallel implements Runnabl
         myThread.start();
     }
 
+    /**
+     * Set the time scale factor.
+     * @param realTimeFactor Time scale factor
+     */
     public void setTimeScale(double realTimeFactor) {
         // convert the given time factor to milliseconds
         timeScale = (int) Math.floor(1000 * realTimeFactor);

@@ -27,8 +27,9 @@ import xdevs.core.simulation.SimulationClock;
 import xdevs.core.simulation.Simulator;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Profiling simulation class.
+ * 
+ * It implements a profiling simulation class for DEVS models.
  */
 public class SimulatorProfile extends Simulator {
 

@@ -29,11 +29,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Logger class for the xDEVS framework.
  */
 public class DevsLogger {
 
+    /**
+     * Setup the logger with the default file path and level.
+     * 
+     * @param filePath the file path to save the log.
+     * @param level the level of the log.
+     */
     public static void setup(String filePath, Level level) {
         Logger logger = Logger.getLogger("");
         logger.setLevel(level);
@@ -53,10 +58,18 @@ public class DevsLogger {
         }
     }
 
+    /**
+     * Setup the logger with the default file path and level.
+     * 
+     * @param level the level of the log.
+     */
     public static void setup(Level level) {
         setup("logger.log", level);
     }
 
+    /**
+     * Setup the logger with the default file path and level.
+     */
     public static void setup() {
         setup("logger.log", Level.INFO);
     }

@@ -27,8 +27,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
- *
- * @author jlrisco
+ * Formatter for the xDEVS logger.
  */
 public class LoggerFormatter extends Formatter {
 
@@ -36,6 +35,9 @@ public class LoggerFormatter extends Formatter {
   public static final LoggerFormatter formatter = new LoggerFormatter();
   protected long startTime;
 
+  /**
+   * Constructor for the LoggerFormatter.
+   */
   public LoggerFormatter() {
     super();
     startTime = System.currentTimeMillis();
@@ -51,6 +53,12 @@ public class LoggerFormatter extends Formatter {
     return messageFormat.format(arguments);
   }
 
+  /**
+   * Get the elapsed time since the start of the logger.
+   * 
+   * @param currentTime the current time.
+   * @return the elapsed time.
+   */
   public String getElapsedTime(long currentTime) {
     long elapsedTime = currentTime - startTime;
     long elapsedTimeInSeconds = elapsedTime / 1000;

@@ -22,8 +22,7 @@
 package xdevs.core.util;
 
 /**
- * 
- * @author José Luis Risco Martín
+ * Constants used in the xDEVS framework.
  */
 public class Constants {
     // Commmon constants

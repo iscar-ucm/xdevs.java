@@ -10,5 +10,4 @@ xdevs.core.simulation.dynamic
 xdevs.core.simulation.parallel
 xdevs.core.simulation.profile
 xdevs.core.simulation.realtime
-xdevs.core.test
 xdevs.core.util

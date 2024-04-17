@@ -27,25 +27,57 @@ import xdevs.core.modeling.Component;
 import xdevs.core.modeling.Port;
 
 /**
- * Atomic model to study the performance using the DEVStone benchmark
- *
- * @author José Luis Risco Martín
- *
+ * DEVStone atomic model
  */
 public class DevStoneAtomic extends Atomic {
-      
+
+    /**
+     * Input port
+     */
     public Port<Integer> iIn = new Port<>("in");
+    /**
+     * Output port
+     */
     public Port<Integer> oOut = new Port<>("out");
+
+    /**
+     * Dhrystone benchmark. This benchmark is executed while the atomic model is in delay mode.
+     */
     protected Dhrystone dhrystone;
     
+    /**
+     * Preparation time. Time to prepare the atomic model before the execution of the output and internal transition functions.
+     */
     protected double preparationTime;
+    /**
+     * Internal delay time. Time to execute the internal transition function.
+     */
     protected double intDelayTime;
+    /**
+     * External delay time. Time to execute the external transition function.
+     */
     protected double extDelayTime;
     
+    /**
+     * Number of internal transitions performed
+     */
     public long numDeltInts = 0;
+    /**
+     * Number of external transitions performed
+     */
     public long numDeltExts = 0;
+    /**
+     * Number of events received
+     */
     public long numOfEvents = 0;
     
+    /**
+     * Constructor
+     * @param name name of the model
+     * @param preparationTime preparation time
+     * @param intDelayTime internal delay time
+     * @param extDelayTime external delay time
+     */
     public DevStoneAtomic(String name, double preparationTime, double intDelayTime, double extDelayTime) {
         super(name);
         super.addInPort(iIn);
@@ -55,10 +87,20 @@ public class DevStoneAtomic extends Atomic {
         this.extDelayTime = extDelayTime;
     }
     
+    /**
+     * Constructor
+     * @param name name of the model
+     * @param preparationTime preparation time
+     * @param distribution distribution to generate the internal and external delay times
+     */
     public DevStoneAtomic(String name, double preparationTime, RealDistribution distribution) {
         this(name, preparationTime, distribution.sample(), distribution.sample());
     }
 
+    /**
+     * Constructor
+     * @param xmlAtomic XML element with the atomic model
+     */
     public DevStoneAtomic(Element xmlAtomic) {
         this(xmlAtomic.getAttribute("name"), 
             Double.parseDouble(((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")),
@@ -97,18 +139,31 @@ public class DevStoneAtomic extends Atomic {
         oOut.addValue(0);
     }
 
+    /**
+     * Get the preparation time
+     * @return preparation time
+     */
     public double getPreparationTime() {
         return preparationTime;
     }
 
+    /**
+     * Get the internal delay time
+     * @return internal delay time
+     */
     public double getIntDelayTime() {
         return intDelayTime;
     }
 
+    /**
+     * Get the external delay time
+     * @return external delay time
+     */
     public double getExtDelayTime() {
         return extDelayTime;
     }  
     
+    @Override
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         StringBuilder tabs = new StringBuilder();

@@ -27,17 +27,37 @@ import xdevs.core.modeling.Port;
 
 /**
  * Events generator for the DEVStone benchmark
- *
- * @author José Luis Risco Martín
  */
 public class DevStoneGenerator extends Atomic {
 
+    /**
+     * Output port
+     */
     public Port<Integer> oOut = new Port<>("out");
+    /**
+     * Preparation time. Time to prepare the atomic model before the execution of the output and internal transition functions.
+     */
     protected double preparationTime;
+    /**
+     * Period. Time between consecutive output events.
+     */
     protected double period;
+    /**
+     * Counter of events
+     */
     protected int counter = 1;
+    /**
+     * Maximum number of events to generate
+     */
     protected int maxEvents = Integer.MAX_VALUE;
 
+    /**
+     * Constructor
+     * @param name name of the model
+     * @param preparationTime preparation time
+     * @param period period
+     * @param maxEvents maximum number of events to generate
+     */
     public DevStoneGenerator(String name, double preparationTime, double period, int maxEvents) {
         super(name);
         super.addOutPort(oOut);
@@ -46,6 +66,10 @@ public class DevStoneGenerator extends Atomic {
         this.maxEvents = maxEvents;
     }
 
+    /**
+     * Constructor
+     * @param xmlAtomic XML element with the description of the atomic model
+     */
     public DevStoneGenerator(Element xmlAtomic) {
         this(xmlAtomic.getAttribute("name"),
                 Double.parseDouble(
@@ -87,18 +111,31 @@ public class DevStoneGenerator extends Atomic {
         oOut.addValue(counter);
     }
 
+    /**
+     * Get the period
+     * @return period
+     */
     public double getPeriod() {
         return period;
     }
 
+    /**
+     * Get the maximum number of events to generate
+     * @return maximum number of events
+     */
     public int getMaxEvents() {
         return maxEvents;
     }
 
+    /**
+     * Get the preparation time
+     * @return preparation time
+     */
     public double getPreparationTime() {
         return preparationTime;
     }
 
+    @Override
     public String toXml() {
         StringBuilder builder = new StringBuilder();
         StringBuilder tabs = new StringBuilder();

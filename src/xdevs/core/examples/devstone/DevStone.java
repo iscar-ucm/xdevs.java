@@ -24,28 +24,67 @@ import xdevs.core.modeling.Coupled;
 import xdevs.core.modeling.Port;
 
 /**
- * Coupled model to study the performance using DEVStone
- *
- * @author José Luis Risco Martín
+ * Coupled model to study the performance using DEVStone.
  */
 public abstract class DevStone extends Coupled {
+    /**
+     * DEVStone input port
+     */
     public Port<Integer> iIn = new Port<>("in");
+    /**
+     * DEVStone output port
+     */
     public Port<Integer> oOut = new Port<>("out");
 
+    /**
+     * Constructor
+     * @param name name of the model
+     */
     public DevStone(String name) {
         super(name);
         super.addInPort(iIn);
         super.addOutPort(oOut);
     }
 
+    /**
+     * Theoretical number of atomic models in the DEVStone model
+     * @param width width of the DEVStone model
+     * @param depth depth of the DEVStone model
+     * @return theoretical number of atomic models
+     */
     public abstract int numAtomicsInTheory(int width, int depth);
 
+    /**
+     * Theoretical number of external transitions performed in the simulation of the DEVStone model
+     * @param maxEvents maximum number of input events
+     * @param width width of the DEVStone model
+     * @param depth depth of the DEVStone model
+     * @return theoretical number of external transitions performed
+     */
     public abstract long numDeltExtsInTheory(int maxEvents, int width, int depth);
 
+    /**
+     * Theoretical number of internal transitions performed in the simulation of the DEVStone model
+     * @param maxEvents maximum number of input events
+     * @param width width of the DEVStone model
+     * @param depth depth of the DEVStone model
+     * @return theoretical number of internal transitions performed
+     */
     public abstract long numDeltIntsInTheory(int maxEvents, int width, int depth);
 
+    /**
+     * Theoretical number of events internally received in all the external transition functions.
+     * @param maxEvents number of external input events to the DEVStone model
+     * @param width width of the DEVStone model
+     * @param depth depth of the DEVStone model
+     * @return theoretical number of events internally received in all the external transition functions
+     */
     public abstract long numEventsInTheory(int maxEvents, int width, int depth);
 
+    /**
+     * Number of external transitions performed in the current DEVStone model
+     * @return number of external transitions
+     */
     public long numDeltExtsInPractice() {
         long numDeltExts = 0;
         for (Component c : super.getComponents()) {
@@ -58,6 +97,10 @@ public abstract class DevStone extends Coupled {
         return numDeltExts;
     }
 
+    /**
+     * Number of internal transitions performed in the current DEVStone model
+     * @return number of internal transitions
+     */
     public long numDeltIntsInPractice() {
         long numDeltInts = 0;
         for (Component c : super.getComponents()) {
@@ -70,6 +113,10 @@ public abstract class DevStone extends Coupled {
         return numDeltInts;
     }
 
+    /**
+     * Number of events internally received in all the external transition functions.
+     * @return number of events internally received
+     */
     public long numEventsInPractice() {
         long numOfEvents = 0;
         for (Component c : super.getComponents()) {

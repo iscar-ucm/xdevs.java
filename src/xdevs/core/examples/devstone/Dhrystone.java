@@ -25,8 +25,6 @@ import java.lang.management.ThreadMXBean;
 /**
  * Class to run the Dhrystone benchmark 2.1 for a given amount of time.
  * Downloaded from: http://www.okayan.jp/DhrystoneApplet/
- *
- * @author José Luis Risco Martín
  */
 public class Dhrystone {
 

@@ -24,6 +24,9 @@ import xdevs.core.simulation.parallel.CoordinatorParallel;
 import xdevs.core.simulation.profile.CoordinatorProfile;
 import xdevs.core.util.DevsLogger;
 
+/**
+ * Class to perform DEVStone simulations
+ */
 public class DevStoneSimulation {
     private static final Logger LOGGER = Logger.getLogger(DevStoneSimulation.class.getName());
 
@@ -31,24 +34,69 @@ public class DevStoneSimulation {
     private static final double PREPARATION_TIME = 0.0;
     private static final double PERIOD = 1;
 
+    /**
+     * Enum to define the type of benchmark
+     */
     public static enum BenchmarkType {
         LI, HI, HO, HOmem, HOmod
     };
 
+    /**
+     * Benchmark model
+     */
     protected BenchmarkType model = null;
+    /**
+     * Width of the model
+     */
     protected Integer width = null;
+    /**
+     * Depth of the model
+     */
     protected Integer depth = null;
+    /**
+     * Distribution used to compute transition delays
+     */
     protected String delayDistribution = "Constant-0";
+    /**
+     * Seed for the distribution
+     */
     protected Long seed = null;
+    /**
+     * Coordinator used for the simulation
+     */
     protected String coordinatorAsString = null;
+    /**
+     * Number of threads used in the parallel coordinator
+     */
     protected Integer numThreads = null;
+    /**
+     * If the model is flattened
+     */
     protected Boolean flattened = Boolean.FALSE;
+    /**
+     * Path to load an XML file with the model defined
+     */
     protected String loadXml = null;
+    /**
+     * Path to save an XML file with the model defined
+     */
     protected String saveXml = null;
+    /**
+     * Path where the logger will be saved
+     */
     protected String logPath = null;
 
+    /**
+     * Distribution used to compute transition delays
+     */
     protected RealDistribution distribution = null;
+    /**
+     * Coupled model: generator + DEVStone model
+     */
     protected Coupled framework = null;
+    /**
+     * DEVStone model
+     */
     protected DevStone stone = null;
 
     public static void main(String[] args) {

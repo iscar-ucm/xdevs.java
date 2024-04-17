@@ -29,22 +29,39 @@ import xdevs.core.util.DevsLogger;
 
 /**
  * Coupled model to study the performance HO DEVStone models
- *
- * @author José Luis Risco Martín
  */
 public class DevStoneCoupledHO extends DevStone {
     
     private static final Logger LOGGER = Logger.getLogger(DevStoneCoupledHO.class.getName());
 
+    /**
+     * Additional input port
+     */
     public Port<Integer> iInAux = new Port<>("inAux");
+    /**
+     * Additional output port
+     */
     public Port<Integer> oOutAux = new Port<>("outAux");
 
+    /**
+     * Constructor
+     * @param name name of the model
+     */
     public DevStoneCoupledHO(String name) {
         super(name);
         super.addInPort(iInAux);
         super.addOutPort(oOutAux);
     }
 
+    /**
+     * Constructor
+     * @param prefix prefix of the model name
+     * @param width width of the model
+     * @param depth depth of the model
+     * @param preparationTime preparation time of the atomic models
+     * @param intDelayTime internal delay time of the atomic models
+     * @param extDelayTime external delay time of the atomic models
+     */
     public DevStoneCoupledHO(String prefix, int width, int depth, double preparationTime, double intDelayTime, double extDelayTime) {
         this(prefix + (depth - 1));
         if (depth == 1) {
@@ -72,6 +89,14 @@ public class DevStoneCoupledHO extends DevStone {
         }
     }
 
+    /**
+     * Constructor
+     * @param prefix prefix of the model name
+     * @param width width of the model
+     * @param depth depth of the model
+     * @param preparationTime preparation time of the atomic models
+     * @param distribution distribution of the atomic models, used to compute delay times
+     */
     public DevStoneCoupledHO(String prefix, int width, int depth, double preparationTime, RealDistribution distribution) {
         this(prefix + (depth - 1));
         if (depth == 1) {

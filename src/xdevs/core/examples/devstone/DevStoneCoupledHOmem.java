@@ -25,14 +25,28 @@ import org.apache.commons.math3.distribution.RealDistribution;
 import xdevs.core.modeling.Port;
 
 /**
- * Coupled model to study the performance HO DEVStone models
- *
- * @author José Luis Risco Martín
+ * Coupled model to study the performance HOmem DEVStone models
+ * 
+ * @deprecated This class is deprecated and will be removed in the future.
  */
+@Deprecated
 public class DevStoneCoupledHOmem extends DevStone {
 
+    /**
+     * Additional input port
+     */
     public Port<Integer> iInAux = new Port<>("inAux");
 
+    /**
+     * Constructor
+     * 
+     * @param prefix          prefix of the model name
+     * @param width           width of the model
+     * @param depth           depth of the model
+     * @param preparationTime preparation time
+     * @param intDelayTime    internal delay time
+     * @param extDelayTime    external delay time
+     */
     public DevStoneCoupledHOmem(String prefix, int width, int depth, double preparationTime, double intDelayTime,
             double extDelayTime) {
         super(prefix + (depth - 1));
@@ -76,6 +90,15 @@ public class DevStoneCoupledHOmem extends DevStone {
         }
     }
 
+    /**
+     * Constructor
+     * 
+     * @param prefix          prefix of the model name
+     * @param width           width of the model
+     * @param depth           depth of the model
+     * @param preparationTime preparation time
+     * @param distribution    distribution used to generate the internal and external delay times
+     */
     public DevStoneCoupledHOmem(String prefix, int width, int depth, double preparationTime, RealDistribution distribution) {
         super(prefix + (depth - 1));
         super.addInPort(iInAux);

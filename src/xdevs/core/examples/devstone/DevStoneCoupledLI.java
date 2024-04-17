@@ -23,11 +23,18 @@ import org.apache.commons.math3.distribution.RealDistribution;
 
 /**
  * Coupled model to study the performance LI DEVStone models
- *
- * @author José Luis Risco Martín
  */
 public class DevStoneCoupledLI extends DevStone {
 
+    /**
+     * Constructor
+     * @param prefix prefix of the model name
+     * @param width width of the model
+     * @param depth depth of the model
+     * @param preparationTime preparation time of the atomic models
+     * @param intDelayTime internal delay time of the atomic models
+     * @param extDelayTime external delay time of the atomic models
+     */
     public DevStoneCoupledLI(String prefix, int width, int depth, double preparationTime, double intDelayTime,
                              double extDelayTime) {
         super(prefix + (depth - 1));
@@ -51,6 +58,14 @@ public class DevStoneCoupledLI extends DevStone {
         }
     }
 
+    /**
+     * Constructor
+     * @param prefix prefix of the model name
+     * @param width width of the model
+     * @param depth depth of the model
+     * @param preparationTime preparation time of the atomic models
+     * @param distribution distribution used to generate the delay times
+     */
     public DevStoneCoupledLI(String prefix, int width, int depth, double preparationTime, RealDistribution distribution) {
         super(prefix + (depth - 1));
         if (depth == 1) {

@@ -28,11 +28,21 @@ import xdevs.core.simulation.Coordinator;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author jlrisco
+ * Gpt model.
+ * 
+ * The Gpt model is a simple example of a generator-processor-transducer system.
+ * The generator produces jobs with a given period. The processor processes jobs with a given processing time.
+ * The transducer collects statistics about the jobs.
+ * The simulation finishes when the observation time is reached.
  */
 public class Gpt extends Coupled {
 
+    /**
+     * Constructor
+     * @param name Model name
+     * @param period Generator period
+     * @param observationTime Observation time
+     */
     public Gpt(String name, double period, double observationTime) {
     	super(name);
         Generator generator = new Generator("generator", period);

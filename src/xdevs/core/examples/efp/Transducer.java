@@ -29,24 +29,53 @@ import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
 /**
- *
- * @author José Luis Risco Martín TODO: I keep the Transducer atomic model for
- * the end ...
+ * Transducer
+ * 
+ * The transducer collects statistics about the jobs.
+ * It also finishes the simulation when the observation time is reached.
  */
 public class Transducer extends Atomic {
 
     private static final Logger LOGGER = Logger.getLogger(Transducer.class.getName());
 
+    /**
+     * Input port for arrived jobs.
+     */
     public Port<Job> iArrived = new Port<>("iArrived");
+    /**
+     * Input port for solved jobs.
+     */
     public Port<Job> iSolved = new Port<>("iSolved");
+    /**
+     * Output port to finish the simulation.
+     */
     public Port<Job> oOut = new Port<>("oOut");
-
+    /**
+     * Jobs arrived.
+     */
     protected LinkedList<Job> jobsArrived = new LinkedList<>();
+    /**
+     * Jobs processed.
+     */
     protected LinkedList<Job> jobsSolved = new LinkedList<>();
+    /**
+     * Observation time before finishing the simulation.
+     */
     protected double observationTime;
+    /**
+     * Total time consumed by the jobs.
+     */
     protected double totalTa;
+    /**
+     * Internal clock.
+     */
     protected double clock;
 
+    /**
+     * Constructor
+     * @param name Transducer name
+     * @param observationTime Observation time
+     */
     public Transducer(String name, double observationTime) {
         super(name);
         super.addInPort(iArrived);
@@ -57,6 +86,10 @@ public class Transducer extends Atomic {
         this.observationTime = observationTime;
     }
 
+    /**
+     * Constructor from XML
+     * @param xmlAtomic XML element
+     */
     public Transducer(Element xmlAtomic) {
         this(xmlAtomic.getAttribute("name"), 
              Double.parseDouble(((Element)(xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")));

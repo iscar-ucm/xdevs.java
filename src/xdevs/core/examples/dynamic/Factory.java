@@ -30,8 +30,12 @@ import xdevs.core.simulation.dynamic.CoordinatorDynamic;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author José L. Risco-Martín
+ * Factory with dynamic number of machines.
+ * 
+ * The factory has a generator, a transducer and a variable number of machines.
+ * 
+ * When a job arrives, the factory sends it to the first idle machine.
+ * If there are no idle machines, a new machine is created and incorporated to the factory.
  */
 public class Factory extends Coupled {
 
@@ -40,6 +44,14 @@ public class Factory extends Coupled {
     protected Transducer transducer;
     protected int maxMachines;
 
+    /**
+     * Constructor
+     * @param name Factory name
+     * @param period Generator period
+     * @param processingTime Machine processing time
+     * @param observationTime Transducer observation time
+     * @param maxMachines Maximum number of machines
+     */
     public Factory(String name, double period, double processingTime, double observationTime, int maxMachines) {
     	super(name);
         this.processingTime = processingTime;

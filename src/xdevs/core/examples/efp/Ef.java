@@ -25,19 +25,30 @@ import xdevs.core.modeling.Coupled;
 import xdevs.core.modeling.Port;
 
 /**
- *
- * @author José Luis Risco Martín
+ * Experimental-Frame DEVS coupled model.
+ * 
+ * This class has been designed to simulate the Ef model, which contains the Generator and Transducer models.
  */
 public class Ef extends Coupled {
 
-  protected Port<Job> iStart = new Port<>("start");
+  /**
+   * Input port.
+   */
   protected Port<Job> iIn = new Port<>("in");
+  /**
+   * Output port.
+   */
   protected Port<Job> oOut = new Port<>("out");
 
+  /**
+   * Constructor
+   * @param name Model name
+   * @param period Generator period
+   * @param observationTime Observation time
+   */
   public Ef(String name, double period, double observationTime) {
 	  super(name);
     super.addInPort(iIn);
-    super.addInPort(iStart);
     super.addOutPort(oOut);
     Generator generator = new Generator("generator", period);
     super.addComponent(generator);
@@ -48,6 +59,5 @@ public class Ef extends Coupled {
     super.addCoupling(generator.oOut, this.oOut);
     super.addCoupling(generator.oOut, transducer.iArrived);
     super.addCoupling(transducer.oOut, generator.iStop);
-    super.addCoupling(this.iStart, generator.iStart);
   }
 }

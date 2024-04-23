@@ -24,6 +24,15 @@ import xdevs.core.examples.efp.Job;
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
+/**
+ * Machine class for the Factory example.
+ * 
+ * The machine has two output ports: oJobSolved and oJobIgnored.
+ * The machine has one input port: iJob.
+ * 
+ * When a job arrives, the machine starts processing it. If the machine is already processing a job, 
+ * the new job is ignored and sent through the oJobIgnored port.
+ */
 public class Machine extends Atomic {
 
     public static final String PHASE_IDLE = "idle";

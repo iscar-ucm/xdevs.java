@@ -24,20 +24,33 @@ package xdevs.core.examples.efp;
 import java.io.Serializable;
 
 /**
- *
- * @author José L. Risco Martín
+ * Job class for the GPT or EFP examples.
  */
 public class Job implements Serializable {
 
   private static final long serialVersionUID = 6442709491519565544L;
+  /**
+   * Job id
+   */
   protected String id;
+  /**
+   * Time in which the job was started to be processed.
+   */
   protected double time;
 
+  /**
+   * Constructor
+   * @param name Job id
+   */
   public Job(String name) {
     this.id = name;
     this.time = 0.0;
   }
 
+  /**
+   * Set the job time
+   * @param time Job time
+   */
   public void setTime(double time) {
     this.time = time;
   }

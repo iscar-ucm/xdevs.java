@@ -37,8 +37,9 @@ import xdevs.core.simulation.Coordinator;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author jlrisco
+ * Gpt XML simulation model.
+ * 
+ * This class has been designed to read the Gpt model from an XML file and simulate it.
  */
 public class GptXml extends Coupled {
 

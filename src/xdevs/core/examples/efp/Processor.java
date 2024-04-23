@@ -26,17 +26,39 @@ import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
 /**
- *
- * @author jlrisco
+ * Processor of jobs.
+ * 
+ * The processor processes jobs with a given processing time.
+ * When the processor is busy, it cannot process any other job. In this case the job is lost.
  */
 public class Processor extends Atomic {
 
+    /**
+     * Input port.
+     */
     protected Port<Job> iIn = new Port<>("in");
+    /**
+     * Output port.
+     */
     protected Port<Job> oOut = new Port<>("out");
+    /**
+     * Current job being processed.
+     */
     protected Job currentJob = null;
+    /**
+     * Processing time.
+     */
     protected double processingTime;
-    protected double clock; // *
+    /**
+     * Internal clock.
+     */
+    protected double clock;
 
+    /**
+     * Constructor
+     * @param name Processor name
+     * @param processingTime Processing time
+     */
     public Processor(String name, double processingTime) {
         super(name);
         super.addInPort(iIn);
@@ -46,6 +68,10 @@ public class Processor extends Atomic {
 
     }
 
+    /**
+     * Constructor from XML
+     * @param xmlAtomic XML element
+     */
     public Processor(Element xmlAtomic) {
         this(xmlAtomic.getAttribute("name"), 
              Double.parseDouble(((Element)(xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")));

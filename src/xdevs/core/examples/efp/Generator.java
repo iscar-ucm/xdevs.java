@@ -27,26 +27,32 @@ import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
 /**
- *
- * @author José Luis Risco Martín TODO: I must also modify this class, according
- *         to the source code implemented by Saurabh, a iStart input port must
- *         be added.
+ * Generator of jobs.
+ * 
+ * The generator produces jobs with a given period.
  */
 public class Generator extends Atomic {
-    public Port<Job> iStart = new Port<>("iStart");
     public Port<Job> iStop = new Port<>("iStop");
     public Port<Job> oOut = new Port<>("oOut");
     protected int jobCounter;
     protected double period;
 
+    /**
+     * Constructor
+     * @param name Generator name
+     * @param period Generator period
+     */
     public Generator(String name, double period) {
         super(name);
         super.addInPort(iStop);
-        super.addInPort(iStart);
         super.addOutPort(oOut);
         this.period = period;
     }
 
+    /**
+     * Constructor from XML
+     * @param xmlAtomic XML element
+     */
     public Generator(Element xmlAtomic) {
         this(xmlAtomic.getAttribute("name"), Double.parseDouble(
                 ((Element) (xmlAtomic.getElementsByTagName("constructor-arg").item(0))).getAttribute("value")));

@@ -24,21 +24,23 @@ package xdevs.core.examples.efp;
 import java.util.logging.Level;
 
 import xdevs.core.modeling.Coupled;
-import xdevs.core.modeling.Port;
 import xdevs.core.simulation.Coordinator;
 import xdevs.core.util.DevsLogger;
 
 /**
- *
- * @author jlrisco
+ * Experimental-Frame + Processor (EFP) DEVS coupled model.
  */
 public class Efp extends Coupled {
 
-    protected Port<Job> iStart = new Port<>("start");
-
+    /**
+     * Constructor
+     * @param name Model name
+     * @param generatorPeriod Generator period
+     * @param processorPeriod Processor period
+     * @param transducerPeriod Transducer period
+     */
     public Efp(String name, double generatorPeriod, double processorPeriod, double transducerPeriod) {
         super(name);
-        super.addInPort(iStart);
 
         Ef ef = new Ef("ef", generatorPeriod, transducerPeriod);
         super.addComponent(ef);
@@ -47,7 +49,6 @@ public class Efp extends Coupled {
 
         super.addCoupling(ef.oOut, processor.iIn);
         super.addCoupling(processor.oOut, ef.iIn);
-        super.addCoupling(this.iStart, ef.iStart);
     }
 
     public static void main(String args[]) {

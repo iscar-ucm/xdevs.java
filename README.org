@@ -2,28 +2,30 @@
 
 This is the Java implementation of the [[https://github.com/iscar-ucm/xdevs][xDEVS]] simulation engine (OpenJDK>=11). It has been configured as a Maven project.
 
+- [[https://iscar-ucm.github.io/xdevs.java/apidocs/][API documentation]]
+
 ** Quick start
 
 - clone the git repository:
   
-  #+begin_src shell
-    git clone git@github.com:iscar-ucm/xdevs.java.git
-  #+end_src
+#+begin_src shell
+git clone git@github.com:iscar-ucm/xdevs.java.git
+#+end_src
 
 - the easiest way to test the repository is compiling and running a DevStone benchmark:
 
-  #+begin_src shell
-    mvn clean
-    mvn compile
-    mvn package
-  #+end_src
+#+begin_src shell
+mvn clean
+mvn compile
+mvn package
+#+end_src
 
 - now we can run a DEVStone model, for instance:
 
-  #+begin_example
-    rm -rf logger.log
-    java -cp target/xdevs-3.0.0-jar-with-dependencies.jar xdevs.core.examples.devstone.DevStoneSimulation --model=HO --width=150 --depth=150 --coordinator=Coordinator
-    tail logger.log 
-    [INFO-main|00:00:02.582]: MODEL,MAXEVENTS,WIDTH,DEPTH,NUM_DELT_INTS,NUM_DELT_EXTS,NUM_OF_EVENTS,SIMULATION_TIME,MODEL_CREATION_TIME,ENGINE_SETUP_TIME 
-    [INFO-main|00:00:02.661]: HO,1,150,150,1665076,1665076,1665076,2.439,0.114,0.029 
-  #+end_example
+#+begin_example
+rm -rf logger.log
+java -cp target/xdevs-3.0.0-jar-with-dependencies.jar xdevs.core.examples.devstone.DevStoneSimulation --model=HO --width=150 --depth=150 --coordinator=Coordinator
+tail logger.log 
+[INFO-main|00:00:02.582]: MODEL,MAXEVENTS,WIDTH,DEPTH,NUM_DELT_INTS,NUM_DELT_EXTS,NUM_OF_EVENTS,SIMULATION_TIME,MODEL_CREATION_TIME,ENGINE_SETUP_TIME 
+[INFO-main|00:00:02.661]: HO,1,150,150,1665076,1665076,1665076,2.439,0.114,0.029 
+#+end_example

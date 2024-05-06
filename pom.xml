@@ -43,7 +43,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <reportOutputDirectory>${basedir}/docs/apidocs</reportOutputDirectory>
+                    <reportOutputDirectory>${basedir}/docs</reportOutputDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -2,7 +2,7 @@
 
 This is the Java implementation of the [[https://github.com/iscar-ucm/xdevs][xDEVS]] simulation engine (OpenJDK>=11). It has been configured as a Maven project.
 
-- [[https://iscar-ucm.github.io/xdevs.java/apidocs/][API documentation]]
+- [[https://iscar-ucm.github.io/xdevs.java/][API documentation]]
 
 ** Quick start
 
